@@ -1,0 +1,5 @@
+description = "Remount the system partition to be writable (requires root)."
+prompt = """
+Remount the system partition to be writable (requires root).
+Example execution: adb remount.
+"""

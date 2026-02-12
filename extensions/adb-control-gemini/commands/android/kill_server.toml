@@ -1,0 +1,5 @@
+description = "Stop the ADB server."
+prompt = """
+Stop the ADB server.
+Example execution: adb kill-server.
+"""

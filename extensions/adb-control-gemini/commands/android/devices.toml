@@ -1,0 +1,5 @@
+description = "List currently connected Android devices."
+prompt = """
+List currently connected Android devices.
+Example execution: adb devices.
+"""

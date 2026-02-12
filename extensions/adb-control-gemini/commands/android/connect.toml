@@ -1,0 +1,6 @@
+description = "Connect to an Android device via TCP/IP."
+prompt = """
+Connect to an Android device via TCP/IP.
+Enter the following parameters: <IP:PORT param name>.
+Example execution: adb connect <IP:PORT>.
+"""

@@ -1,0 +1,12 @@
+name = "/computeruse:type"
+description = "Type text and optionally press Enter"
+prompt = '''
+You have the tool: execute_action.
+Call: execute_action("type_text_at", {"x": {{x}}, "y": {{y}}, "text": "{{text}}", "press_enter": {{press_enter}}})
+Then: capture_state("typed")
+'''
+[tools.defaults]
+x = 500
+y = 500
+text = ""
+press_enter = false

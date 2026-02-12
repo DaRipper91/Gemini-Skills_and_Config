@@ -1,0 +1,41 @@
+name = "/computeruse"
+description = "Computer Use MCP: help & quick usage"
+
+prompt = """
+Computer Use MCP (Playwright • async)
+-------------------------------------
+Tools (MCP):
+• initialize_browser(url, width=1440, height=900, headless=?)
+• execute_action(action_name, args)
+    Supported: open_web_browser, click_at, type_text_at,
+               scroll_to_percent, enter_text_at, select_option_at,
+               drag_and_drop, press_key, execute_javascript
+• capture_state(action_name, result_ok=true, error_msg="")
+• close_browser()
+
+Common commands:
+/computeruse:init url="https://example.com"                Initialize browser + open URL (headless by default)
+/computeruse:init url="https://google.com" headless=false  Initialize with a visible window (headful)
+/computeruse:open url="https://..."                        Navigate current page
+/computeruse:click x=500 y=500                             Click at normalized coords (0..1000 scale)
+/computeruse:type  x=220 y=120 text="hello" press_enter=true|false
+                                                Focus → replace → type
+/computeruse:scroll y=700                                  Scroll to vertical percent (0..1000)
+/computeruse:press key="End"                               Press a key or chord (e.g. "Meta+L")
+/computeruse:js code="..."                                 Run JS (if implemented)
+/computeruse:state prompt="Summarize this page"            Screenshot → optional Gemini prompt on the image
+/computeruse:macro actions='[{"name":"click_at","args":{"x":500,"y":500}}, ...]'
+/computeruse:close                                         Close browser
+
+Headless / Headful:
+• Default is headless (silent).
+• Pass headless=false on /computeruse:init to show a window.
+• Env toggles when starting the server:
+  - CU_HEADFUL=1   → force headful by default
+  - CU_NO_SANDBOX=1 (Linux, trusted env only) → add --no-sandbox
+
+Notes:
+- Coordinates are normalized (0..1000) and converted to current viewport pixels set by /computeruse:init.
+- Some actions are scaffolded; you’ll see a friendly warning until implemented in the MCP.
+- If you see “Browser not initialized”, run /computeruse:init first.
+"""

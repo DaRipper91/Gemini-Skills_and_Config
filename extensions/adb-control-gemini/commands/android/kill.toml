@@ -1,0 +1,6 @@
+description = "Terminate a process by PID."
+prompt = """
+Terminate a process by PID.
+Enter the following parameters: <PID param name>.
+Example execution: adb shell kill <PID>.
+"""

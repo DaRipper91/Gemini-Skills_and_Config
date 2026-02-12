@@ -1,0 +1,14 @@
+description = "Stop the Pickle Rick loop and reset state"
+prompt = """
+You are stopping the Pickle Rick loop.
+
+Run the cancel script to deactivate the stop hook and clean up state:
+```bash
+node "${extensionPath}/extension/bin/cancel.js"
+```
+
+**Windows (PowerShell):**
+```powershell
+node "${extensionPath}/extension/bin/cancel.js"
+```
+"""

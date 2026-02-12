@@ -1,0 +1,5 @@
+description = "Display information about the Package Manager."
+prompt = """
+Display information about the Package Manager.
+Example execution: adb shell dumpsys package.
+"""

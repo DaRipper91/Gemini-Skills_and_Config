@@ -1,0 +1,5 @@
+description = "Display internal memory usage information of the device."
+prompt = """
+Display internal memory usage information of the device.
+Example execution: adb shell df -h.
+"""

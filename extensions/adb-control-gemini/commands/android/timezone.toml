@@ -1,0 +1,5 @@
+description = "Get the current time zone of the device."
+prompt = """
+Get the current time zone of the device.
+Example execution: adb shell getprop persist.sys.timezone.
+"""

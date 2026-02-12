@@ -1,0 +1,6 @@
+description = "Force stop an application."
+prompt = """
+Force stop an application.
+Enter the following parameters: <package_name param name>.
+Example execution: adb shell am force-stop <package_name>.
+"""

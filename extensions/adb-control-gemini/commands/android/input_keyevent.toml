@@ -1,0 +1,6 @@
+description = "Send a key event."
+prompt = """
+Send a key event.
+Enter the following parameters: <key_code (KEY_CODE) param name>.
+Example execution: adb shell input keyevent KEYCODE_BACK.
+"""

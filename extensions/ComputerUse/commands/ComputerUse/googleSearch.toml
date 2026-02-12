@@ -1,0 +1,11 @@
+name = "/computeruse:google_search"
+description = "Search Google for a query."
+prompt = '''
+You have the tools: execute_action, fill_selector, capture_state.
+
+1) execute_action("open_web_browser", {"url": "https://www.google.com"})
+2) fill_selector('textarea[name="q"]', '{{query}}', true, true)
+3) capture_state("google_results")
+'''
+[tools.defaults]
+query = "computer networking"

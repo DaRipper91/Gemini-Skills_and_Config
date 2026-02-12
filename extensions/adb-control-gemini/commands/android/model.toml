@@ -1,0 +1,5 @@
+description = "Get the model name of the device."
+prompt = """
+Get the model name of the device.
+Example execution: adb shell getprop ro.product.model.
+"""

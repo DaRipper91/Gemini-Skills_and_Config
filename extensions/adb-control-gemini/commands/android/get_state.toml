@@ -1,0 +1,5 @@
+description = "Get the connection state of the device."
+prompt = """
+Get the connection state of the device.
+Example execution: adb get-state.
+"""

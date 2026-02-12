@@ -1,0 +1,5 @@
+description = "Display the battery status of the device."
+prompt = """
+Display the battery status of the device.
+Example execution: adb shell dumpsys battery | grep status.
+"""

@@ -1,0 +1,6 @@
+description = "Restart ADB in TCP/IP mode on a specific port."
+prompt = """
+Restart ADB in TCP/IP mode on a specific port.
+Enter the following parameters: <port param name>.
+Example execution: adb tcpip <port>.
+"""

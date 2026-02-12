@@ -1,0 +1,5 @@
+description = "Get the manufacturer name of the device."
+prompt = """
+Get the manufacturer name of the device.
+Example execution: adb shell getprop ro.product.manufacturer.
+"""

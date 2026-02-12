@@ -1,0 +1,13 @@
+name = "/computeruse:open"
+description = "Navigate current page to a URL via execute_action(open_web_browser)."
+
+prompt = '''
+You have the tools: execute_action.
+
+Behavior:
+- Call execute_action("open_web_browser", {"url": {{url|""}} }).
+- Print the final status/result.
+
+'''
+[defaults]
+url = "https://example.com"

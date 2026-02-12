@@ -1,0 +1,77 @@
+Screen {
+    background: $surface;
+}
+
+BrowserScreen {
+    height: 1fr;
+}
+
+DataTable {
+    height: 1fr;
+    width: 60%;
+    border: tall $primary;
+}
+
+#right_pane {
+    width: 40%;
+    height: 1fr;
+    border: tall $secondary;
+}
+
+VerticalScroll {
+    height: 1fr;
+    width: 100%;
+}
+
+Markdown {
+    height: auto;
+    width: 100%;
+    padding: 1;
+}
+
+#action_container {
+    height: auto;
+    padding: 1;
+    align: center middle;
+    background: $surface-darken-1;
+}
+
+Input {
+    margin: 1 0;
+    border: solid $accent;
+}
+
+TabbedContent {
+    height: 1fr;
+}
+
+/* Modal Styling */
+PathInputScreen {
+    align: center middle;
+}
+
+#dialog {
+    padding: 0 1;
+    width: 60;
+    height: auto;
+    border: thick $background 80%;
+    background: $surface;
+}
+
+#dialog Label {
+    padding: 1;
+    content-align: center middle;
+    width: 100%;
+}
+
+#buttons {
+    width: 100%;
+    align: center middle;
+    height: auto;
+    padding-top: 1;
+    padding-bottom: 1;
+}
+
+#buttons Button {
+    margin: 0 1;
+}

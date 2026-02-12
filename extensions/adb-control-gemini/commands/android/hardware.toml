@@ -1,0 +1,5 @@
+description = "Get hardware information of the device."
+prompt = """
+Get hardware information of the device.
+Example execution: adb shell getprop ro.hardware.
+"""

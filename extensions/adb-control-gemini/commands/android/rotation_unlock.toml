@@ -1,0 +1,5 @@
+description = "Unlock screen rotation (allow auto-rotate)."
+prompt = """
+Unlock screen rotation (allow auto-rotate).
+Example execution: adb shell settings put system accelerometer_rotation 1.
+"""

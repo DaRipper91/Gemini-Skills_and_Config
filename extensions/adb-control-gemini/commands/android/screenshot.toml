@@ -1,0 +1,6 @@
+description = "Take a screenshot of the device and save it locally."
+prompt = """
+Take a screenshot of the device and save it locally.
+Enter the following parameters: <local_file_path (optional) param name>.
+Example execution: adb exec-out screencap -p > <local_file_path>.
+"""

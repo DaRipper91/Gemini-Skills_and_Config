@@ -1,0 +1,5 @@
+description = "Switch to automatic brightness mode."
+prompt = """
+Switch to automatic brightness mode.
+Example execution: adb shell settings put system screen_brightness_mode 1.
+"""

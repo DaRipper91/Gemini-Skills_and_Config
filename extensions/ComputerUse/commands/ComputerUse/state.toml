@@ -1,0 +1,39 @@
+name = "/computeruse:state"
+description = "Screenshot current page (capture_state) and optionally send to Gemini with a prompt."
+
+prompt = '''
+You have the tools: capture_state.
+
+Args:
+- action_name:str   (label for the screenshot filename)
+- result_ok:bool    (default true)
+- error_msg:str     (default "")
+- prompt:str        (optional: if provided, call `gemini -p "@<file> <prompt>"`)
+
+Steps:
+1) capture_state(action_name={{action_name|"state"}}, result_ok={{result_ok|true}}, error_msg={{error_msg|""}})
+2) If ok=false → print error and stop.
+3) If {{prompt}} provided, run a shell one-liner to call Gemini on the saved image.
+
+!{
+set -euo pipefail
+P="{{path}}"
+PROMPT="{{prompt}}"
+if [ -z "${P}" ]; then
+  echo "No screenshot path returned."
+  exit 0
+fi
+
+if [ -n "${PROMPT}" ] && [ "${PROMPT}" != "None" ]; then
+  gemini -p "@${P} ${PROMPT}"
+else
+  echo "Screenshot saved at: ${P}"
+  echo "URL: {{url}}"
+fi
+}
+'''
+[defaults]
+action_name = "state"
+result_ok   = true
+error_msg   = ""
+prompt      = ""

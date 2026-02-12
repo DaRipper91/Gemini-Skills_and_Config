@@ -1,0 +1,5 @@
+description = "Turn off simulated battery charging (requires root)."
+prompt = """
+Turn off simulated battery charging (requires root).
+Example execution: adb shell dumpsys battery set ac 0; adb shell dumpsys battery set usb 0.
+"""

@@ -1,0 +1,5 @@
+description = "Clear the existing logcat logs."
+prompt = """
+Clear the existing logcat logs.
+Example execution: adb logcat -c.
+"""

@@ -1,0 +1,6 @@
+description = "Filter logcat logs by tag."
+prompt = """
+Filter logcat logs by tag.
+Enter the following parameters: <tag param name>.
+Example execution: adb logcat -s <tag>.
+"""

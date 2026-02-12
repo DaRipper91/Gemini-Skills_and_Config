@@ -1,0 +1,10 @@
+description = "Calculate project hash and locate history"
+prompt = """
+You need to calculate and display the project hash.
+
+1.  Get the current absolute working directory.
+2.  Calculate its SHA256 hash using `shasum -a 256`.
+3.  Construct the history path: `~/.gemini/tmp/<HASH>/chats/`.
+4.  Verify if the directory exists.
+5.  Output the Hash and the Path clearly to the user.
+"""

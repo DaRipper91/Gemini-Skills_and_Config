@@ -1,0 +1,5 @@
+description = "Display information about the Window Manager."
+prompt = """
+Display information about the Window Manager.
+Example execution: adb shell dumpsys window.
+"""

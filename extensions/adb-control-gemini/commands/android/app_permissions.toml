@@ -1,0 +1,6 @@
+description = "List the permissions of an application."
+prompt = """
+List the permissions of an application.
+Enter the following parameters: <package_name param name>.
+Example execution: adb shell dumpsys package <package_name> | grep perm.
+"""

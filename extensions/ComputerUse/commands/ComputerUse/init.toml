@@ -1,0 +1,21 @@
+name = "/computeruse:init"
+description = "Start Playwright (ComputerUse) at a URL with a given viewport. Optional headless=false for a visible window."
+
+prompt = '''
+You have the tools: initialize_browser.
+
+Behavior:
+- Call initialize_browser with provided args.
+- Args:
+  - url:str          (required)
+  - width:int        (default 1440)
+  - height:int       (default 900)
+  - headless:bool    (optional; if omitted, server/env decides)
+
+Then confirm success or show the error.
+'''
+
+[defaults]
+width = 1440
+height = 900
+# leave headless unset by default; user can pass headless=false to show UI

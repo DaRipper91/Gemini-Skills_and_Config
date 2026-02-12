@@ -1,0 +1,10 @@
+name = "/computerusecomputeuse:click"
+description = "Click at coordinates"
+prompt = '''
+You have the tool: execute_action.
+Call: execute_action("click_at", {"x": {{x}}, "y": {{y}}})
+Then: capture_state("clicked")
+'''
+[tools.defaults]
+x = 500
+y = 500

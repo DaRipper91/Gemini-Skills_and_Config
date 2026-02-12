@@ -1,0 +1,5 @@
+description = "Press the power button (turn screen on/off)."
+prompt = """
+Press the power button (turn screen on/off).
+Example execution: adb shell input keyevent KEYCODE_POWER.
+"""

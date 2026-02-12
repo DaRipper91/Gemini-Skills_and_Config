@@ -1,0 +1,6 @@
+description = "Record the screen with a specific bit rate."
+prompt = """
+Record the screen with a specific bit rate.
+Enter the following parameters: <bitrate (Mbps) param name>.
+Example execution: adb shell screenrecord --bit-rate <bitrate> /sdcard/demo.mp4.
+"""

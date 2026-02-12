@@ -1,0 +1,5 @@
+description = "Turn off the always-on screen mode."
+prompt = """
+Turn off the always-on screen mode.
+Example execution: adb shell settings put global stay_on_while_plugged_in 0.
+"""

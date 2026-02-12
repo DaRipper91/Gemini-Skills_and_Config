@@ -1,0 +1,5 @@
+description = "Set SELinux to Permissive mode (warn but do not block)."
+prompt = """
+Set SELinux to Permissive mode (warn but do not block).
+Example execution: adb shell setenforce 0.
+"""

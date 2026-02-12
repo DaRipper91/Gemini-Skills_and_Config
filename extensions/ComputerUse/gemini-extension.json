@@ -1,0 +1,13 @@
+{
+"name": "ComputerUse",
+"version": "1.0.0",
+"description": "Gemini Computer Use - autonomous web browsing and testing including scroll, click, type, screenshot, pdf, and more.",
+"mcpServers": {
+    "computerUse": {
+      "command": "bash",
+      "args": ["${extensionPath}${/}servers${/}run.sh"]
+    }
+},
+"contextFileName": "GEMINI.md",
+"excludeTools": []
+}

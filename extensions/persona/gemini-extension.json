@@ -1,0 +1,17 @@
+{
+  "name": "persona",
+  "version": "1.0.0",
+  "contextFileName": "CONTEXT.md",
+  "mcpServers": {
+    "Persona": {
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/JasperHG90/persona[mcp]",
+        "persona",
+        "mcp",
+        "start"
+      ]
+    }
+  }
+}

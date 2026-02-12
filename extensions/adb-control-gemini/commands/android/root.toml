@@ -1,0 +1,5 @@
+description = "Restart ADB with root privileges."
+prompt = """
+Restart ADB with root privileges.
+Example execution: adb root.
+"""

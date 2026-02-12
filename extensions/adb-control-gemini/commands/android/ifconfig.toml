@@ -1,0 +1,5 @@
+description = "Display the network interface configuration."
+prompt = """
+Display the network interface configuration.
+Example execution: adb shell ifconfig.
+"""

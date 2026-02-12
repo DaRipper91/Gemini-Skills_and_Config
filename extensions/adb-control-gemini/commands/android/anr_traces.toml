@@ -1,0 +1,5 @@
+description = "Display ANR (Application Not Responding) traces."
+prompt = """
+Display ANR (Application Not Responding) traces.
+Example execution: adb shell cat /data/anr/traces.txt.
+"""

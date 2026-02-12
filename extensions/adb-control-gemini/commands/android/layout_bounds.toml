@@ -1,0 +1,6 @@
+description = "Display the layout boundaries of UI components."
+prompt = """
+Display the layout boundaries of UI components.
+Enter the following parameters: <0 (off) or 1 (on) param name>.
+Example execution: adb shell setprop debug.layout true.
+"""

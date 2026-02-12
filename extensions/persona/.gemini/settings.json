@@ -1,0 +1,10 @@
+{
+  "context": {
+    "fileFiltering": {
+      "respectGitIgnore": false,
+      "geminiIgnoreFilter": true
+    }
+  },
+  "enableRecursiveFileSearch": true,
+  "disableFuzzySearch": false
+}

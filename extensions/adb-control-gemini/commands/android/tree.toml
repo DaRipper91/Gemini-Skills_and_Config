@@ -1,0 +1,6 @@
+description = "Display the directory tree structure (if available)."
+prompt = """
+Display the directory tree structure (if available).
+Enter the following parameters: <path (optional) param name>.
+Example execution: adb shell tree /sdcard.
+"""

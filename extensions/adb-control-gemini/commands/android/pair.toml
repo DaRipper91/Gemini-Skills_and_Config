@@ -1,0 +1,6 @@
+description = "Pair with an Android device via Wi-Fi."
+prompt = """
+Pair with an Android device via Wi-Fi.
+Enter the following parameters: <IP:PORT param name>, <pairing_code param name>.
+Example execution: adb pair <IP:PORT> <pairing_code>.
+"""

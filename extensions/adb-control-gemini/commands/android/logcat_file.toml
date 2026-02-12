@@ -1,0 +1,6 @@
+description = "Write the logcat logs to a file on the computer."
+prompt = """
+Write the logcat logs to a file on the computer.
+Enter the following parameters: <local_file_path param name>.
+Example execution: adb logcat -d > <local_file_path>.
+"""

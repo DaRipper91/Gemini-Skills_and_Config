@@ -1,0 +1,23 @@
+{
+  "name": "Shades of the Pickle",
+  "type": "custom",
+  "Background": "#050f05",
+  "Foreground": "#ccff90",
+  "LightBlue": "#4caf50",
+  "AccentBlue": "#2e7d32",
+  "AccentPurple": "#6d4c41",
+  "AccentCyan": "#aeea00",
+  "AccentGreen": "#76ff03",
+  "AccentYellow": "#fbc02d",
+  "AccentRed": "#d32f2f",
+  "Comment": "#4e6e50",
+  "Gray": "#616161",
+  "DiffAdded": "#DAF5E1",
+  "DiffRemoved": "#FFD6E0",
+  "GradientColors": ["#1b5e20", "#43a047", "#76ff03"],
+  "text": {
+    "primary": "#ccff90",
+    "secondary": "#4caf50",
+    "accent": "#76ff03"
+  }
+}

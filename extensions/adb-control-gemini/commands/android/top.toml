@@ -1,0 +1,5 @@
+description = "Display the most resource-intensive processes."
+prompt = """
+Display the most resource-intensive processes.
+Example execution: adb shell top -n 1.
+"""

@@ -1,0 +1,5 @@
+description = "Get system property information of the device."
+prompt = """
+Get system property information of the device.
+Example execution: adb shell getprop.
+"""

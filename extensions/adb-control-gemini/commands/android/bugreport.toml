@@ -1,0 +1,5 @@
+description = "Create a full bug report."
+prompt = """
+Create a full bug report.
+Example execution: adb bugreport <path>.
+"""

@@ -1,0 +1,11 @@
+name = "/computeruse:wiki_search"
+description = "Search Wikipedia for a query."
+prompt = '''
+You have the tools: execute_action, fill_selector, click_selector, capture_state.
+
+1) execute_action("open_web_browser", {"url": "https://en.wikipedia.org/wiki/Main_Page"})
+2) fill_selector('input[name="search"]', '{{query}}', true, true)
+3) capture_state("wiki_results")
+'''
+[tools.defaults]
+query = "computer networking"

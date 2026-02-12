@@ -1,0 +1,5 @@
+description = "Display the IP address of the device."
+prompt = """
+Display the IP address of the device.
+Example execution: adb shell ip addr show wlan0.
+"""

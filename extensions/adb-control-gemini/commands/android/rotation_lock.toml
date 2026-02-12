@@ -1,0 +1,5 @@
+description = "Lock screen rotation in the current mode."
+prompt = """
+Lock screen rotation in the current mode.
+Example execution: adb shell settings put system accelerometer_rotation 0.
+"""

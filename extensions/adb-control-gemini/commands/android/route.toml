@@ -1,0 +1,5 @@
+description = "Display the routing table."
+prompt = """
+Display the routing table.
+Example execution: adb shell route.
+"""

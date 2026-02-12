@@ -1,0 +1,5 @@
+description = "Get the serial number of the device."
+prompt = """
+Get the serial number of the device.
+Example execution: adb get-serialno.
+"""

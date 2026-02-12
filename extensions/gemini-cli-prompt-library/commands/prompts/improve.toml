@@ -1,0 +1,71 @@
+description = "Analyze and improve a given prompt."
+prompt = """
+# Improve This Prompt
+
+Analyze and improve the following prompt:
+
+```
+{{args}}
+```
+
+## Evaluation Criteria:
+
+### 1. Clarity & Specificity
+**Current State:**
+- Is the prompt clear and unambiguous?
+- Are the instructions specific enough?
+- Is there room for misinterpretation?
+
+**Improvements:**
+- Make objectives crystal clear
+- Add specific requirements
+- Remove ambiguity
+
+### 2. Structure & Organization
+**Current State:**
+- Is the prompt well-organized?
+- Does it use headers, lists, or sections?
+- Is information presented logically?
+
+**Improvements:**
+- Add clear structure with headers
+- Use numbered steps for processes
+- Group related information
+
+### 3. Context & Constraints
+**Current State:**
+- Does it provide enough context?
+- Are constraints clearly defined?
+- Are assumptions stated?
+
+**Improvements:**
+- Add relevant background information
+- Specify limitations and boundaries
+- State assumptions explicitly
+
+### 4. Output Specification
+**Current State:**
+- Is the desired output format specified?
+- Are examples provided?
+- Is the level of detail clear?
+
+**Improvements:**
+- **Clarity:** Be specific and unambiguous.
+- **Context:** Reference relevant code/files.
+- **Structure:** Use clear formatting.
+- **Actionability:** Provide concrete advice.
+- **Measurable Outcomes:** Define success criteria.
+- **Conciseness:** Prioritize brevity.
+- **Keywords:** Use essential terms.
+- **No Redundancy:** Avoid filler.
+- **Implementation Focus:** Practical suggestions.
+- **Professional Terminology:** Use industry standards.
+- **User Intent Alignment:** Match user's goal.
+- **Prompt Improvement:** Iterative refinement.
+- **Variable Substitution:** Use placeholders.
+- **Best Practices:** Adhere to standards.
+- **Examples:** Include code snippets.
+- **Efficiency:** Optimize prompt length.
+- **Precision:** Exact language.
+- **Action:** Execute prompt.
+"""

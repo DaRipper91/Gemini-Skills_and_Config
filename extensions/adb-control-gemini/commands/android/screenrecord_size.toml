@@ -1,0 +1,6 @@
+description = "Record the screen with a specific size."
+prompt = """
+Record the screen with a specific size.
+Enter the following parameters: <width x height param name>.
+Example execution: adb shell screenrecord --size <width>x<height> /sdcard/demo.mp4.
+"""

@@ -1,0 +1,2318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-Researcher Benchmark Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;600;700;800&family=Outfit:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Editorial Color System */
+            --bg-primary: #fefce8;
+            --bg-secondary: #fffef7;
+            --bg-elevated: #fef9e6;
+            --bg-glass: rgba(254, 252, 232, 0.9);
+
+            --text-primary: #18181b;
+            --text-secondary: #3f3f46;
+            --text-tertiary: #71717a;
+            --text-muted: #a1a1aa;
+
+            --accent-primary: #1e3a8a;
+            --accent-secondary: #92400e;
+            --accent-success: #065f46;
+            --accent-warning: #92400e;
+            --accent-danger: #be123c;
+            --accent-info: #1e3a8a;
+            --accent-rose: #be123c;
+
+            /* NO GRADIENTS - Editorial uses solid colors only */
+
+            /* Editorial Typography */
+            --font-heading: 'Spectral', Georgia, serif;
+            --font-body: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --font-mono: 'DM Mono', 'SF Mono', 'Monaco', monospace;
+
+            /* Refined Shadows (no purple glow) */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 2px 4px -1px rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+            --shadow-lg: 0 4px 8px -2px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+            --shadow-xl: 0 8px 16px -4px rgba(0, 0, 0, 0.12), 0 4px 8px -4px rgba(0, 0, 0, 0.08);
+            --shadow-2xl: 0 16px 32px -8px rgba(0, 0, 0, 0.16);
+
+            /* Glass Morphism */
+            --glass-border: rgba(212, 212, 216, 0.3);
+            --glass-blur: blur(8px);
+
+            /* Spacing Scale - Editorial Optimized */
+            --spacing-xxs: 0.125rem;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2.5rem;
+            --spacing-2xl: 4rem;
+
+            /* Border Radius - refined, not too round */
+            --radius-sm: 4px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+
+            /* Transitions - elegant ease */
+            --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-base: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+            --transition-slow: 0.5s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-primary);
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 0, 0, 0.01) 2px, rgba(0, 0, 0, 0.01) 4px),
+                repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0, 0, 0, 0.01) 2px, rgba(0, 0, 0, 0.01) 4px);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ============ Upload Modal ============ */
+        .upload-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        }
+
+        .upload-modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 0;
+            border: 3px solid var(--text-primary);
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 100px;
+            height: 8px;
+            background: var(--accent-rose);
+        }
+
+        .modal-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        .modal-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .btn-primary {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-family: var(--font-body);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-secondary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .modal-hint {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+        }
+
+        /* ============ Layout Container ============ */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: var(--spacing-lg) var(--spacing-xl);
+            display: none;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        /* ============ Header ============ */
+        .header {
+            padding: 2.5rem 0 2rem;
+            position: relative;
+            border-bottom: 3px double var(--accent-primary);
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 4px;
+            height: 60%;
+            background: var(--accent-rose);
+            transform: translateY(20%);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 120px;
+            height: 3px;
+            background: var(--accent-secondary);
+        }
+
+        .header-title {
+            font-family: var(--font-heading);
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            color: var(--accent-primary);
+            letter-spacing: -0.03em;
+            line-height: 0.95;
+            text-align: left;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 1.25rem;
+            position: relative;
+        }
+
+        .header-subtitle {
+            font-family: var(--font-body);
+            font-size: 1rem;
+            color: var(--accent-secondary);
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            text-align: left;
+            max-width: 1600px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 1.25rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* ============ Section Headings ============ */
+        .section-heading {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+            letter-spacing: -0.02em;
+            position: relative;
+            display: inline-block;
+            margin-top: 0;
+        }
+
+        .section-heading::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent-rose);
+        }
+
+        .section-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.25rem;
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        /* ============ Hero Command Center Layout ============ */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 2fr 1.5fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+            align-items: stretch;
+        }
+
+        .hero-leaderboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .hero-metrics-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .hero-metrics {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        /* ============ Capabilities Grid (Side-by-Side Matrix & Radar) ============ */
+        .capabilities-section {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-2xl);
+            align-items: stretch;
+        }
+
+        .matrix-section-container,
+        .radar-section-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .matrix-table {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+        }
+
+        .chart-card-sidebar {
+            flex: 1;
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+            padding: var(--spacing-sm) var(--spacing-md);
+            /* Matching matrix padding */
+            display: flex;
+            flex-direction: column;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-card-sidebar .section-heading {
+            margin-top: 0;
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* ============ Historical Trends ============ */
+        .charts-section {
+            margin-bottom: var(--spacing-2xl);
+        }
+
+        .chart-card-full {
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+            padding: var(--spacing-xl);
+            margin-top: var(--spacing-md);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .metric-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+            border-radius: 0;
+            padding: var(--spacing-md);
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--accent-rose);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .metric-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .metric-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.12);
+            border-color: var(--accent-primary);
+        }
+
+        .metric-card:nth-child(2) {
+            transform: translateY(-8px);
+        }
+
+        .metric-card:nth-child(4) {
+            transform: translateY(8px);
+        }
+
+        .metric-value {
+            font-family: var(--font-mono);
+            font-size: 2.5rem;
+            font-weight: 500;
+            color: var(--accent-rose);
+            margin-bottom: 0.25rem;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .metric-label {
+            font-family: var(--font-body);
+            font-size: 0.6875rem;
+            color: var(--text-tertiary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        /* ============ Hero Leaderboard ============ */
+        .hero-leaderboard {
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+            border-radius: 0;
+            padding: 1.5rem 1.25rem;
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.06);
+            position: relative;
+        }
+
+        .hero-leaderboard::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            height: 6px;
+            background: linear-gradient(90deg, var(--accent-rose) 0%, var(--accent-rose) 30%, transparent 30%);
+        }
+
+        .leaderboard-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            letter-spacing: -0.01em;
+        }
+
+        /* Removed Redundant Model Comparison */
+
+        /* ============ Agent Performance Matrix ============ */
+        .matrix-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .matrix-table {
+            width: 100%;
+            background: var(--bg-secondary);
+            border-radius: 0;
+            overflow: hidden;
+            border: 2px solid var(--text-primary);
+            box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.08);
+        }
+
+        .matrix-header {
+            background: var(--bg-elevated);
+            display: grid;
+            grid-template-columns: 180px repeat(3, 1fr) 140px;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            font-weight: 800;
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--text-primary);
+            font-family: var(--font-body);
+            text-align: center;
+        }
+
+        /* All titles centered per request */
+
+        .matrix-body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .matrix-row {
+            display: grid;
+            grid-template-columns: 180px repeat(3, 1fr) 140px;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            align-items: center;
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .matrix-row::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-rose);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .matrix-row:hover {
+            background: var(--bg-elevated);
+        }
+
+        .matrix-row:hover::before {
+            opacity: 1;
+        }
+
+        .matrix-row:last-child {
+            border-bottom: none;
+        }
+
+        .agent-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+        }
+
+        .score-cell {
+            font-weight: 700;
+            text-align: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0;
+            transition: all var(--transition-base);
+            font-size: 0.9375rem;
+            font-family: var(--font-mono);
+        }
+
+        .score-cell:hover {
+            transform: translate(-1px, -1px);
+            box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .score-90plus {
+            background: var(--accent-success);
+            color: white;
+            border: 2px solid var(--accent-success);
+        }
+
+        .score-80to90 {
+            background: var(--accent-primary);
+            color: white;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .score-70to80 {
+            background: var(--accent-secondary);
+            color: white;
+            border: 2px solid var(--accent-secondary);
+        }
+
+        .score-below70 {
+            background: var(--accent-danger);
+            color: white;
+            border: 2px solid var(--accent-danger);
+        }
+
+        .best-model {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-tertiary);
+            letter-spacing: 0.03em;
+            text-align: center;
+        }
+
+        /* ============ Charts Section ============ */
+        .charts-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .chart-card {
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+            border-radius: 0;
+            padding: 1.25rem;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.06);
+            transition: all var(--transition-base);
+            position: relative;
+        }
+
+        .chart-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-primary::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: 80px;
+            height: 6px;
+            background: var(--accent-rose);
+        }
+
+        .chart-title {
+            font-family: var(--font-heading);
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 0.125rem;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .chart-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .chart-container {
+            height: 220px;
+            position: relative;
+        }
+
+        /* ============ Tests Accordion ============ */
+        .tests-section {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .accordion {
+            background: var(--bg-secondary);
+            border: 2px solid var(--text-primary);
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all var(--transition-base);
+        }
+
+        .accordion-item:last-child {
+            border-bottom: none;
+        }
+
+        .accordion-header {
+            padding: var(--spacing-md);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all var(--transition-base);
+            background: var(--bg-secondary);
+            position: relative;
+        }
+
+        .accordion-header::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--accent-primary);
+            opacity: 0;
+            transition: opacity var(--transition-base);
+        }
+
+        .accordion-header:hover {
+            background: var(--bg-elevated);
+        }
+
+        .accordion-header:hover::before {
+            opacity: 1;
+        }
+
+        .accordion-header.open {
+            background: var(--bg-elevated);
+        }
+
+        .accordion-header.open::before {
+            opacity: 1;
+        }
+
+        .accordion-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .accordion-meta {
+            font-size: 0.875rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .accordion-toggle {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            transition: transform var(--transition-base);
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .accordion-toggle.open {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .accordion-content.open {
+            max-height: 3000px;
+        }
+
+        .test-list {
+            padding: 0.75rem;
+            background: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .test-item {
+            display: grid;
+            grid-template-columns: 20px 1fr auto auto;
+            gap: 0.6rem;
+            align-items: center;
+            padding: 0.4rem;
+            border-radius: 4px;
+            transition: all 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .test-item:hover {
+            background: var(--bg-secondary);
+        }
+
+        .test-status {
+            font-size: 1.1rem;
+        }
+
+        .test-name {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .test-score {
+            font-weight: 700;
+            color: var(--accent-primary);
+            min-width: 50px;
+            text-align: right;
+        }
+
+        .test-model {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            min-width: 70px;
+            text-align: right;
+        }
+
+        /* ============ Responsive Design ============ */
+        @media (max-width: 1024px) {
+            .header-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-section {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-metrics {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .capabilities-section {
+                grid-template-columns: 1fr;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .matrix-header,
+            .matrix-row {
+                grid-template-columns: 150px repeat(3, 1fr) 80px;
+                font-size: 0.75rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: var(--spacing-sm);
+            }
+
+            .header-title {
+                font-size: 2.5rem;
+            }
+
+            .matrix-table {
+                overflow-x: auto;
+            }
+
+            .matrix-header,
+            .matrix-row {
+                width: 700px;
+                /* Force scroll */
+            }
+        }
+
+        /* ============ Search Bar ============ */
+        .search-container {
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--text-primary);
+            background: var(--bg-secondary);
+            font-family: var(--font-body);
+            font-size: 1rem;
+            border-radius: 0;
+            outline: none;
+            transition: all var(--transition-base);
+        }
+
+        .search-input:focus {
+            box-shadow: 4px 4px 0 var(--accent-primary);
+            transform: translate(-2px, -2px);
+        }
+
+        /* ============ Animations ============ */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes shimmer {
+            0% {
+                background-position: -1000px 0;
+            }
+
+            100% {
+                background-position: 1000px 0;
+            }
+        }
+
+        .metric-card {
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .metric-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .metric-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .metric-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .metric-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .leaderboard-item {
+            animation: slideInRight 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .leaderboard-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .leaderboard-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .leaderboard-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .matrix-row {
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .matrix-row:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .matrix-row:nth-child(2) {
+            animation-delay: 0.1s;
+        }
+
+        .matrix-row:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .matrix-row:nth-child(4) {
+            animation-delay: 0.2s;
+        }
+
+        .matrix-row:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .matrix-row:nth-child(6) {
+            animation-delay: 0.3s;
+        }
+
+        .matrix-row:nth-child(7) {
+            animation-delay: 0.35s;
+        }
+
+        .matrix-row:nth-child(8) {
+            animation-delay: 0.4s;
+        }
+
+        .chart-card {
+            animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            opacity: 0;
+        }
+
+        .chart-card:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .chart-card:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+
+        /* ============ Quick Win Badges ============ */
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.6rem;
+            border-radius: 0;
+            font-size: 0.6rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-left: 0.5rem;
+            letter-spacing: 0.08em;
+            border: 2px solid currentColor;
+        }
+
+        .badge-hard {
+            background-color: var(--accent-danger);
+            color: white;
+            border-color: var(--accent-danger);
+        }
+
+        .badge-medium {
+            background-color: var(--accent-secondary);
+            color: white;
+            border-color: var(--accent-secondary);
+        }
+
+        .badge-easy {
+            background-color: var(--accent-success);
+            color: white;
+            border-color: var(--accent-success);
+        }
+
+        /* ============ Test Detail Styling (Editorial) ============ */
+        .overall-justification {
+            background: var(--bg-elevated);
+            border: 2px solid var(--accent-primary);
+            padding: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
+            position: relative;
+        }
+
+        .overall-justification::before {
+            content: 'JUDGE JUSTIFICATION';
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: var(--accent-primary);
+            color: white;
+            font-size: 0.65rem;
+            font-weight: 800;
+            padding: 2px 8px;
+            letter-spacing: 0.1em;
+        }
+
+        .rubric-profile {
+            background: var(--bg-elevated);
+            border: 1px solid var(--text-primary);
+            padding: 1.25rem;
+            margin: 1rem 0;
+            font-size: 0.875rem;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .rubric-profile-title {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            border-bottom: 2px solid var(--accent-rose);
+            display: inline-block;
+            padding-bottom: 2px;
+        }
+
+        .rubric-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            color: var(--text-primary);
+        }
+
+        .rubric-name {
+            font-weight: 700;
+            font-size: 0.8125rem;
+            color: var(--text-primary);
+        }
+
+        .rubric-score {
+            font-family: var(--font-mono);
+            font-weight: 700;
+            color: var(--accent-primary);
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 8px;
+            font-size: 0.875rem;
+        }
+
+        .detail-reasoning {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            line-height: 1.6;
+            padding: 0.75rem;
+            background: rgba(0, 0, 0, 0.02);
+            border-left: 3px solid var(--accent-rose);
+        }
+
+        .must-include-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--text-primary);
+            padding: 1.25rem;
+            margin: 1rem 0;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        .must-include-title {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .checklist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            font-size: 0.8125rem;
+            padding: 0.6rem;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: var(--bg-primary);
+            border-radius: 4px;
+        }
+
+        .must-include-status {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            font-weight: 900;
+            flex-shrink: 0;
+            font-size: 0.75rem;
+        }
+
+        .item-met {
+            border-left: 3px solid var(--accent-success);
+            color: var(--accent-success);
+            background: rgba(6, 95, 70, 0.03);
+        }
+
+        .item-missed {
+            border-left: 3px solid var(--accent-danger);
+            color: var(--text-tertiary);
+            opacity: 0.8;
+            background: rgba(190, 18, 60, 0.03);
+            text-decoration: line-through;
+        }
+
+        /* ============ Agent Performance Label ============ */
+        .agent-performance-label {
+            display: inline-block;
+            margin-left: 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .perf-excellent {
+            color: #059669;
+        }
+
+        .perf-good {
+            color: #0891b2;
+        }
+
+        .perf-acceptable {
+            color: #f59e0b;
+        }
+
+        .perf-weak {
+            color: #dc2626;
+        }
+
+        .agent-output-container {
+            margin: 1.5rem 0;
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.15);
+        }
+
+        .agent-output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: #1e293b;
+            color: #94a3b8;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .agent-output-pre {
+            white-space: pre-wrap;
+            margin: 0;
+            max-height: 500px;
+            overflow-y: auto;
+            font-size: 0.875rem;
+            padding: 1.25rem;
+            line-height: 1.6;
+            font-family: var(--font-mono);
+        }
+
+        .copy-output-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 4px 10px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all var(--transition-fast);
+            font-family: var(--font-body);
+        }
+
+        .copy-output-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #fff;
+        }
+
+        .execution-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            padding: 0.75rem 0;
+            border-top: 1px dashed rgba(0, 0, 0, 0.1);
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+
+        .test-detail-loading {
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-tertiary);
+            font-style: italic;
+            font-family: var(--font-heading);
+            font-size: 1.1rem;
+        }
+
+        .test-case-item {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .test-case-item:last-child {
+            border-bottom: none;
+        }
+
+        .test-case-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.25rem;
+            cursor: pointer;
+            background: var(--bg-primary);
+            transition: background var(--transition-fast);
+        }
+
+        .test-case-header:hover {
+            background: var(--bg-elevated);
+        }
+
+        .test-case-header.open {
+            background: var(--bg-elevated);
+            border-left: 3px solid var(--accent-primary);
+        }
+
+        .test-case-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .test-case-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .test-case-score {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .test-case-score-value {
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+        }
+
+        .test-case-status {
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .test-case-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .test-case-content.open {
+            max-height: 2000px;
+        }
+
+        .test-case-details {
+            padding: 1.25rem;
+            background: var(--bg-secondary);
+        }
+
+        /* ============ Leaderboard ============ */
+        .leaderboard {
+            display: grid;
+            gap: var(--spacing-md);
+        }
+
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: var(--bg-primary);
+            border-radius: 0;
+            padding: 1rem;
+            box-shadow: none;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-left: 4px solid transparent;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .leaderboard-item:hover {
+            transform: translateX(3px);
+            border-left-color: var(--accent-primary);
+            box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        .leaderboard-item.rank-1 {
+            background: #fffbeb;
+            border-left-color: #fbbf24;
+            border-left-width: 5px;
+        }
+
+        .leaderboard-item.rank-1:hover {
+            border-left-color: #f59e0b;
+        }
+
+        .leaderboard-item.rank-2 {
+            border-left-color: #9ca3af;
+            border-left-width: 4px;
+        }
+
+        .leaderboard-item.rank-3 {
+            border-left-color: #dc7633;
+            border-left-width: 4px;
+        }
+
+        .leaderboard-medal {
+            font-size: 1.5rem;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+        }
+
+        .leaderboard-details {
+            flex: 1;
+        }
+
+        .leaderboard-model {
+            font-weight: 700;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            margin-bottom: 0.125rem;
+            letter-spacing: -0.01em;
+        }
+
+        .leaderboard-stats {
+            display: flex;
+            gap: var(--spacing-sm);
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .leaderboard-stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .leaderboard-score {
+            flex-shrink: 0;
+            text-align: right;
+        }
+
+        .leaderboard-score-value {
+            font-family: var(--font-mono);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--accent-rose);
+            line-height: 1;
+            letter-spacing: -0.01em;
+        }
+
+        .leaderboard-delta {
+            font-size: 0.6875rem;
+            margin-top: 0.125rem;
+            color: var(--text-tertiary);
+            font-weight: 600;
+        }
+
+        .leaderboard-delta.positive {
+            color: var(--accent-success);
+        }
+
+        /* ============ Footer ============ */
+        .site-footer {
+            background: var(--bg-secondary);
+            border-top: 3px double var(--accent-primary);
+            padding: 2rem 0;
+            margin-top: var(--spacing-2xl);
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-xl);
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--accent-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: color var(--transition-fast);
+        }
+
+        .footer-links a:hover {
+            color: var(--accent-secondary);
+        }
+
+        .footer-copyright {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .footer-copyright a {
+            color: var(--text-secondary);
+            text-decoration: none;
+        }
+
+        .footer-copyright a:hover {
+            text-decoration: underline;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Dashboard Container -->
+    <div class="container" id="dashboard">
+        <!-- Header -->
+        <header class="header" role="banner">
+            <h1 class="header-title">Co-Researcher Benchmark</h1>
+            <p class="header-subtitle">PhD-Level Research Agent Evaluation Framework</p>
+        </header>
+
+        <!-- Hero Command Center -->
+        <section class="hero-section" aria-label="Key Performance Metrics">
+            <div id="heroLeaderboard" class="hero-leaderboard-container"></div>
+
+            <div class="hero-metrics-container" id="heroMetricsGrid"></div>
+        </section>
+
+        <!-- Capabilities Overview -->
+        <section class="capabilities-section">
+            <div class="matrix-section-container" aria-label="Agent Performance Comparison">
+                <h2 class="section-heading">Capability Matrix</h2>
+                <div class="matrix-table">
+                    <div class="matrix-header">
+                        <div>Agent</div>
+                        <div>Claude</div>
+                        <div>Codex</div>
+                        <div>Gemini</div>
+                        <div>Peak</div>
+                    </div>
+                    <div class="matrix-body" id="agentMatrix"></div>
+                </div>
+            </div>
+
+            <div class="radar-section-container">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+                    <h2 class="section-heading" style="margin-bottom: 0; white-space: nowrap;">Agent
+                        Capability Signature</h2>
+                    <select id="radarModelFilter" class="search-input"
+                        style="width: auto; cursor: pointer; padding: 0.4rem 0.8rem; font-size: 0.75rem;"
+                        onchange="handleRadarModelChange()">
+                    </select>
+                </div>
+                <div class="chart-card-sidebar">
+                    <div style="flex: 1; position: relative;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Historical Evolution -->
+        <section class="charts-section" aria-label="Performance Trends">
+            <h2 class="section-heading">Historical Evolution</h2>
+            <div class="chart-card-full">
+                <div class="chart-container-large">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Case Details -->
+        <section class="tests-section" aria-label="Individual Test Results">
+            <h2 class="section-heading">Test Case Breakdown</h2>
+            <p class="section-description">Detailed results for all evaluation tests</p>
+
+            <div class="search-container" style="display: flex; gap: 1rem;">
+                <input type="text" id="testSearch" class="search-input"
+                    placeholder="Search agents (e.g. 'lateral') or specific tests..." onkeyup="filterTests()"
+                    style="flex: 1;">
+                <select id="modelFilter" class="search-input" style="width: auto; cursor: pointer;"
+                    onchange="handleModelFilterChange()">
+                    <option value="">Select Model...</option>
+                </select>
+                <select id="runFilter" class="search-input" style="width: auto; cursor: pointer; max-width: 200px;"
+                    onchange="handleRunFilterChange()">
+                    <option value="">Latest Run</option>
+                </select>
+            </div>
+
+            <div class="accordion" id="testAccordion"></div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="https://github.com/poemswe/co-researcher" target="_blank">GitHub</a>
+                <a href="http://linkedin.com/in/poepoemyintswe/" target="_blank">LinkedIn</a>
+                <a href="https://www.threads.com/@poemswe" target="_blank">Threads</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025-2026 <a href="https://github.com/poemswe" target="_blank">Poe Poe Myint Swe</a>
+                &bull; MIT License
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Configuration - uses relative path for GitHub Pages compatibility
+        const GITHUB_RAW_URL = 'benchmark_overview.json';
+        let globalOverview = null;
+        let detailedRuns = {};
+        let radarChartInstance = null;
+
+        async function loadData() {
+            try {
+                const response = await fetch(`${GITHUB_RAW_URL}?t=${new Date().getTime()}`);
+                if (!response.ok) throw new Error('Fetch failed');
+                globalOverview = await response.json();
+                renderDashboard(globalOverview);
+            } catch (error) {
+                // Silent fail or graceful handled elsewhere
+            }
+        }
+
+        async function loadRunDetail(runId) {
+            if (detailedRuns[runId]) return detailedRuns[runId];
+
+            const run = globalOverview.runs.find(r => r.run_id === runId);
+            if (!run || !run.detail_file) return null;
+
+            try {
+                const response = await fetch(`${run.detail_file}?t=${new Date().getTime()}`);
+                if (!response.ok) throw new Error('Detail fetch failed');
+
+                const detailData = await response.json();
+                detailedRuns[runId] = detailData;
+                return detailData;
+            } catch (e) {
+                return null;
+            }
+        }
+
+
+        function handleFileUpload(event) {
+            const file = event.dataTransfer?.files?.[0] || event.target?.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    globalOverview = JSON.parse(e.target.result);
+                    renderDashboard(globalOverview);
+                    document.getElementById('uploadModal').classList.remove('active');
+                } catch (err) {
+                    alert('Invalid JSON file');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function updateHeroMetrics(overview, model) {
+            const runs = overview.runs || [];
+            const latest = runs.filter(r => r.model === model).pop() || runs[runs.length - 1];
+
+            // Trigger detailed render if we switch model
+            if (latest) renderTestAccordion(latest);
+
+            const totalTests = latest?.tests_run || 22;
+            const overallAvg = latest?.average_score || 0;
+            const passCount = latest?.tests_passed || 0;
+            const modelCount = overview.summary_stats?.models?.length || 0;
+
+            document.getElementById('heroMetricsGrid').innerHTML = `
+                <div class="metric-card">
+                    <div class="metric-value">${overallAvg.toFixed(1)}</div>
+                    <div class="metric-label">Avg Score (${model})</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${passCount}/${totalTests}</div>
+                    <div class="metric-label">Tests Passed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${((passCount / totalTests) * 100).toFixed(0)}%</div>
+                    <div class="metric-label">Pass Rate</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">${modelCount}</div>
+                    <div class="metric-label">Models Tested</div>
+                </div>
+            `;
+        }
+        const testMetadata = {
+            "critical-analyzer": [
+                { name: "Bias Identification", difficulty: "Hard", rubrics: "Analytical Quality (75%), Output Structure (25%)", mustInclude: ["Identify Funding Bias", "Identify Conflict of Interest", "Identify Selection Bias", "Identify Attrition Bias", "Identify Detection Bias", "Identify HARKing"] },
+                { name: "Fallacy Detection", difficulty: "Medium", rubrics: "Analytical Quality (75%), Output Structure (25%)", mustInclude: ["Post Hoc Fallacy", "Hasty Generalization", "Confounding Identification"] },
+                { name: "Methodology Critique", difficulty: "Medium", rubrics: "Analytical Quality (70%), Research Quality (30%)", mustInclude: ["Design Flaws", "Validity Threats", "Missing Controls"] },
+                { name: "Contradictory Evidence", difficulty: "Hard", rubrics: "Analytical Quality (75%), Reasoning Quality (25%)", mustInclude: ["Methodological Differences", "Confounding Factors", "Population Differences"] }
+            ],
+            "hypothesis-explorer": [
+                { name: "Hypothesis Formulation", difficulty: "Medium", rubrics: "Design Quality (60%), Analytical Quality (40%)", mustInclude: ["Clear Prediction", "Specific Variables", "Falsifiable Statement"] },
+                { name: "Unfalsifiable Claim", difficulty: "Hard", rubrics: "Analytical Quality (75%), Design Quality (25%)", mustInclude: ["Circular Reasoning", "Unfalsifiable Statement", "Testable Reformulation"] },
+                { name: "Variable Mapping", difficulty: "Hard", rubrics: "Design Quality (70%), Analytical Quality (30%)", mustInclude: ["IV/DV Distinction", "Confound Identification", "Operationalization"] }
+            ],
+            "lateral-thinker": [
+                { name: "Analogy Finding", difficulty: "Hard", rubrics: "Analytical Quality (70%), Design Quality (30%)", mustInclude: ["Appropriate Mappings", "Clear Explanation", "Novel Connections"] },
+                { name: "Constraint Satisfaction", difficulty: "Hard", rubrics: "Analytical Quality (75%), Output Structure (25%)", mustInclude: ["All Constraints Satisfied", "Trade-offs Explained", "Feasibility Assessment"] },
+                { name: "First Principles", difficulty: "Hard", rubrics: "Analytical Quality (75%), Reasoning Quality (25%)", mustInclude: ["Core Assumptions", "Logical Steps", "Complexity Emergence"] }
+            ],
+            "literature-reviewer": [
+                { name: "Basic Search", difficulty: "Easy", rubrics: "Research Quality (70%), Output Structure (30%)", mustInclude: ["Keywords", "Search Terms", "Databases"] },
+                { name: "Citation Chain", difficulty: "Hard", rubrics: "Research Quality (75%), Analytical Quality (25%)", mustInclude: ["Key Citations", "Seminal Papers", "Research Lineage"] },
+                { name: "Gap Analysis", difficulty: "Medium", rubrics: "Research Quality (70%), Analytical Quality (30%)", mustInclude: ["Covered Areas", "Research Gaps", "Future Directions"] },
+                { name: "Hallucination Detection", difficulty: "Hard", rubrics: "Research Quality (80%), Analytical Quality (20%)", mustInclude: ["Suspicious Citations", "Misquotations", "Verification Strategy"] }
+            ],
+            "qual-researcher": [
+                { name: "Coding Strategy", difficulty: "Medium", rubrics: "Qualitative Quality (75%), Output Structure (25%)", mustInclude: ["Code Categories", "Hierarchy", "Codebook"] },
+                { name: "Leading Questions", difficulty: "Hard", rubrics: "Qualitative Quality (70%), Analytical Quality (30%)", mustInclude: ["Bias Identification", "Response Impact", "Neutral Rewording"] },
+                { name: "Thematic Analysis", difficulty: "Medium", rubrics: "Qualitative Quality (80%), Output Structure (20%)", mustInclude: ["Key Themes", "Supporting Quotes", "Theme Hierarchy"] }
+            ],
+            "quant-analyst": [
+                { name: "Effect Size Interpretation", difficulty: "Medium", rubrics: "Quantitative Quality (75%), Output Structure (25%)", mustInclude: ["Statistical Significance", "Practical Significance", "Magnitude Context"] },
+                { name: "Simpson's Paradox", difficulty: "Hard", rubrics: "Quantitative Quality (80%), Analytical Quality (20%)", mustInclude: ["Paradox Mechanism", "Simpson's Paradox Concept", "Resolution"] },
+                { name: "Stat Method Selection", difficulty: "Medium", rubrics: "Quantitative Quality (75%), Output Structure (25%)", mustInclude: ["Test Assumptions", "Rationale", "Alternatives"] }
+            ],
+            "ethics-expert": [
+                { name: "Privacy Risk", difficulty: "Hard", rubrics: "Design Quality (75%), Reasoning Quality (25%)", mustInclude: ["De-identification Risks", "Consent Issues", "Data Protection"] }
+            ],
+            "peer-reviewer": [
+                { name: "Manuscript Critique", difficulty: "Medium", rubrics: "Analytical Quality (75%), Output Structure (25%)", mustInclude: ["Major Flaws", "Methodological Issues", "Significance Assessment"] }
+            ]
+        };
+
+        // Initialize
+        window.addEventListener('load', loadData);
+        document.body.ondragover = (e) => e.preventDefault();
+        document.body.ondrop = (e) => { e.preventDefault(); handleFileUpload(e); };
+
+
+
+        function renderDashboard(overview) {
+            if (!overview || !overview.runs || overview.runs.length === 0) return;
+
+            const runs = overview.runs;
+            const latest = runs[runs.length - 1];
+
+            document.getElementById('dashboard').classList.add('active');
+
+            // 1. Hero Metrics (Default to latest)
+            updateHeroMetrics(overview, latest.model);
+
+            // 2. Model Comparison (Quick Win 4: Leaderboard)
+            const models = {};
+            runs.forEach(run => {
+                // Always use the latest run for the "Current State" leaderboard
+                if (!models[run.model] || new Date(run.timestamp) > new Date(models[run.model].timestamp)) {
+                    models[run.model] = {
+                        score: run.average_score,
+                        passed: run.tests_passed || 20,
+                        total: run.tests_run || 22,
+                        timestamp: run.timestamp
+                    };
+                }
+            });
+            const sortedModels = Object.entries(models)
+                .sort((a, b) => b[1].score - a[1].score)
+                .filter(([name]) => name !== 'test-model'); // Exclude test-model
+
+            const baseScore = sortedModels[sortedModels.length - 1][1].score;
+
+            const leaderboardHtml = `
+                <div class="leaderboard-title">🏆 Model Leaderboard</div>
+                <div class="leaderboard">
+                    ${sortedModels.map(([model, data], rank) => {
+                const medals = ['🥇', '🥈', '🥉'];
+                const delta = (data.score - baseScore).toFixed(1);
+                const deltaText = delta > 0 ? `+${delta} ▲` : 'baseline';
+                const deltaClass = delta > 0 ? 'positive' : '';
+                return `
+                            <div class="leaderboard-item rank-${rank + 1}" 
+                                 onmouseover="updateHeroMetrics(window.globalOverview, '${model}')"
+                                 style="cursor: pointer;">
+                                <div class="leaderboard-medal">${medals[rank] || '📊'}</div>
+                                <div class="leaderboard-details">
+                                    <div class="leaderboard-model">${model.charAt(0).toUpperCase() + model.slice(1)}</div>
+                                    <div class="leaderboard-stats">
+                                        <span class="leaderboard-stat-item">${data.passed}/${data.total} passed</span>
+                                        <span class="leaderboard-stat-item">${(data.passed / data.total * 100).toFixed(0)}% rate</span>
+                                    </div>
+                                </div>
+                                <div class="leaderboard-score">
+                                    <div class="leaderboard-score-value">${data.score.toFixed(1)}</div>
+                                    <div class="leaderboard-delta ${deltaClass}">${deltaText}</div>
+                                </div>
+                            </div>
+                        `;
+            }).join('')}
+                </div>
+            `;
+            document.getElementById('heroLeaderboard').innerHTML = leaderboardHtml;
+
+            // 3. Agent Performance Matrix
+            const matrixData = {};
+            runs.forEach(h => {
+                if (!h.scores_by_agent) return;
+                const provider = h.model.split(':')[0].toLowerCase();
+                for (const [agent, scores] of Object.entries(h.scores_by_agent)) {
+                    if (!matrixData[agent]) matrixData[agent] = {};
+                    matrixData[agent][provider] = scores.reduce((a, b) => a + b, 0) / scores.length;
+                }
+            });
+
+            document.getElementById('agentMatrix').innerHTML = Object.entries(matrixData)
+                .sort((a, b) => {
+                    const aValues = Object.values(a[1]);
+                    const bValues = Object.values(b[1]);
+                    const aAvg = aValues.reduce((a, b) => a + b, 0) / aValues.length;
+                    const bAvg = bValues.reduce((a, b) => a + b, 0) / bValues.length;
+                    return bAvg - aAvg;
+                })
+                .map(([agent, scores]) => {
+                    const values = Object.values(scores);
+                    const agentAvg = values.reduce((a, b) => a + b, 0) / values.length;
+                    const bestModel = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+
+                    // Star-based Performance Rating
+                    let perfLabel = '';
+                    let perfClass = '';
+                    if (agentAvg >= 90) {
+                        perfLabel = '⭐⭐⭐';
+                        perfClass = 'perf-excellent';
+                    } else if (agentAvg >= 80) {
+                        perfLabel = '⭐⭐';
+                        perfClass = 'perf-good';
+                    } else if (agentAvg >= 70) {
+                        perfLabel = '⭐';
+                        perfClass = 'perf-acceptable';
+                    } else {
+                        perfLabel = '❌';
+                        perfClass = 'perf-weak';
+                    }
+                    return `
+                        <div class="matrix-row">
+                            <div class="agent-name">
+                                ${agent.replace('-', ' ')}
+                                <span class="agent-performance-label ${perfClass}">${perfLabel}</span>
+                            </div>
+                            ${['claude', 'codex', 'gemini'].map(model => {
+                        const score = scores[model];
+                        if (!score) return '<div class="score-cell">—</div>';
+                        let className = 'score-cell ';
+                        if (score >= 90) className += 'score-90plus';
+                        else if (score >= 80) className += 'score-80to90';
+                        else if (score >= 70) className += 'score-70to80';
+                        else className += 'score-below70';
+                        return `<div class="${className}">${score.toFixed(1)}</div>`;
+                    }).join('')}
+                            <div class="score-cell" 
+                                 style="display: flex; justify-content: center; align-items: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+                                ${bestModel}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+            // 5. Populate Model Filter - Default to Top Ranked Model
+            const topModel = sortedModels.length > 0 ? sortedModels[0][0] : (overview.summary_stats.models[0] || '');
+
+            const modelSelect = document.getElementById('modelFilter');
+            const radarModelSelect = document.getElementById('radarModelFilter');
+            const currentVal = modelSelect.value || topModel; // Default to top model
+
+            const modelOptions = overview.summary_stats.models.map(m => `<option value="${m}" ${m === currentVal ? 'selected' : ''}>${m.toUpperCase()}</option>`).join('');
+            const radarOptions = overview.summary_stats.models.map(m => `<option value="${m}" ${m === topModel ? 'selected' : ''}>${m.toUpperCase()}</option>`).join('');
+
+            modelSelect.innerHTML = '<option value="">Select Model...</option>' + modelOptions;
+            radarModelSelect.innerHTML = radarOptions;
+
+            // If we just loaded and set the default, trigger the cascade to ensure the accordion matches
+            if (!modelSelect.value && topModel) {
+                modelSelect.value = topModel;
+                handleModelFilterChange(); // This will trigger run filter update and accordion render
+            }
+
+            renderCharts(runs, latest);
+
+            renderTestAccordion(latest);
+        }
+
+        function handleRadarModelChange() {
+            const selectedModel = document.getElementById('radarModelFilter').value;
+            if (!selectedModel) return;
+
+            const runs = globalOverview.runs.filter(r => r.model === selectedModel);
+            if (runs.length > 0) {
+                updateRadarChart(runs[runs.length - 1]);
+            }
+        }
+
+        function handleModelFilterChange() {
+            const selectedModel = document.getElementById('modelFilter').value;
+            const runSelect = document.getElementById('runFilter');
+
+            // Allow clearing model to reset to global latest
+            if (!selectedModel) {
+                runSelect.innerHTML = '<option value="">Latest Run</option>';
+                const latest = globalOverview.runs[globalOverview.runs.length - 1];
+                renderTestAccordion(latest);
+                updateHeroMetrics(globalOverview, latest.model);
+                updateRadarChart(latest);
+                return;
+            }
+
+            // Populate Run Select
+            const runs = globalOverview.runs.filter(r => r.model === selectedModel);
+            // Sort new to old
+            runs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            runSelect.innerHTML = runs.map(r =>
+                `<option value="${r.run_id}">${new Date(r.timestamp).toLocaleDateString()} (${r.run_id.split('_')[1] || 'Merged'})</option>`
+            ).join('');
+
+            // Trigger latest for this model
+            handleRunFilterChange();
+        }
+
+        function handleRunFilterChange() {
+            const runId = document.getElementById('runFilter').value;
+            let run;
+
+            if (runId) {
+                run = globalOverview.runs.find(r => r.run_id === runId);
+            } else {
+                // If no specific run (or just changed model), pick latest for model
+                const selectedModel = document.getElementById('modelFilter').value;
+                const modelRuns = globalOverview.runs.filter(r => r.model === selectedModel);
+                run = modelRuns[modelRuns.length - 1];
+            }
+
+            if (run) {
+                renderTestAccordion(run);
+                updateHeroMetrics(globalOverview, run.model);
+                updateRadarChart(run);
+            }
+        }
+
+
+        async function renderTestAccordion(latest) {
+            const accordion = document.getElementById('testAccordion');
+            const agents = Object.keys(latest.scores_by_agent).sort();
+
+            // Show loading state if details not cached
+            if (!detailedRuns[latest.run_id]) {
+                accordion.innerHTML = '<div class="test-detail-loading">Loading specific test performance and agent logs...</div>';
+            }
+
+            // Load details
+            const details = await loadRunDetail(latest.run_id);
+
+            accordion.innerHTML = agents.map((agent, idx) => {
+                const agentScores = latest.scores_by_agent[agent];
+                const avg = agentScores.reduce((a, b) => a + b, 0) / agentScores.length;
+
+                const agentDetails = details && details.test_results ? details.test_results.filter(r => r.agent === agent) : [];
+
+                return `
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div>
+                                <div class="accordion-title">
+                                    ${agent.replace('-', ' ')}
+                                </div>
+                                <div class="accordion-meta">${agentScores.length} tests • Avg: ${avg.toFixed(1)}</div>
+                            </div>
+                            <div class="accordion-toggle">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            ${agentScores.map((score, i) => {
+                    const detail = agentDetails[i];
+                    const testInfo = detail ? { name: detail.test_name, difficulty: detail.difficulty, id: detail.test_case } : (testMetadata[agent] ? testMetadata[agent][i] : { name: `Test ${i + 1}`, difficulty: 'Medium' });
+                    const passed = detail ? detail.passed : score >= 70;
+                    const testId = detail ? detail.id : `${agent}-${i}`;
+
+                    return `
+                                <div class="test-case-item">
+                                    <div class="test-case-header" onclick="toggleTestCase(this)">
+                                        <div class="test-case-info">
+                                            <span class="test-case-name">${testInfo.name || testInfo.id}</span>
+                                            <span class="badge badge-${(testInfo.difficulty || 'Medium').toLowerCase()}">${testInfo.difficulty || 'Medium'}</span>
+                                        </div>
+                                        <div class="test-case-score">
+                                            <span class="test-case-score-value">${score.toFixed(0)}</span>
+                                            <span class="test-case-status" style="color: ${passed ? 'var(--accent-success)' : 'var(--accent-danger)'};">${passed ? '✓ PASS' : '✗ FAIL'}</span>
+                                            <span class="accordion-toggle" style="font-size: 0.875rem;">▼</span>
+                                        </div>
+                                    </div>
+                                    <div class="test-case-content">
+                                        <div class="test-case-details">
+                                            <div style="font-size: 0.75rem; color: var(--text-tertiary); margin-bottom: 1rem;">${latest.model.toUpperCase()} • ${latest.run_id}</div>
+
+                                            ${detail && detail.judge_output && detail.judge_output.overall_justification && !detail.judge_output.overall_justification.startsWith('ANALYTICAL') && !detail.judge_output.overall_justification.startsWith('OUTPUT') ? `
+                                                <div class="overall-justification">
+                                                    ${detail.judge_output.overall_justification}
+                                                </div>
+                                            ` : ''}
+
+                                            ${detail && detail.judge_output && detail.judge_output.must_include_analysis ? `
+                                                <div class="must-include-container">
+                                                    <div class="must-include-title">
+                                                        Checklist Analysis
+                                                        <span style="font-size: 0.65rem; opacity: 0.7;">${detail.judge_output.must_include_analysis.details || ''}</span>
+                                                    </div>
+                                                    <div class="checklist-grid">
+                                                        ${(detail.judge_output.must_include_analysis.met || []).map(item => `
+                                                            <div class="checklist-item item-met">
+                                                                <span class="must-include-status">✓</span>
+                                                                ${item}
+                                                            </div>
+                                                        `).join('')}
+                                                        ${(detail.judge_output.must_include_analysis.missed || []).map(item => `
+                                                            <div class="checklist-item item-missed">
+                                                                <span class="must-include-status">✗</span>
+                                                                ${item}
+                                                            </div>
+                                                        `).join('')}
+                                                    </div>
+                                                </div>
+                                            ` : ''}
+
+                                            ${detail && detail.judge_output && detail.judge_output.rubric_breakdown ? `
+                                                <div class="rubric-profile">
+                                                    <div class="rubric-profile-title">Rubric breakdown</div>
+                                                    ${Object.entries(detail.judge_output.rubric_breakdown).map(([name, data]) => `
+                                                        <div style="margin-bottom: 1rem;">
+                                                            <div class="rubric-item">
+                                                                <span class="rubric-name">${name.replace(/-/g, ' ').toUpperCase()}</span>
+                                                                <span class="rubric-score">${data.score}/100</span>
+                                                            </div>
+                                                            <div class="detail-reasoning">${data.reasoning}</div>
+                                                        </div>
+                                                    `).join('')}
+                                                </div>
+                                            ` : ''}
+
+                                            ${detail && detail.agent_output ? `
+                                                <div class="agent-output-container">
+                                                    <div class="agent-output-header">
+                                                        <span>Agent Output</span>
+                                                        <div style="display: flex; gap: 10px; align-items: center;">
+                                                            <span>${(detail.agent_output.length / 1024).toFixed(1)} KB</span>
+                                                            <button class="copy-output-btn" onclick="copyToClipboard(this, \`${testId}\`)">Copy</button>
+                                                        </div>
+                                                    </div>
+                                                    <pre id="output-${testId}" class="agent-output-pre">${detail.agent_output.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre>
+                                                </div>
+                                            ` : ''}
+
+                                            ${detail && detail.execution_metadata ? `
+                                                <div class="execution-meta">
+                                                    <div class="execution-meta-item">⏱️ ${detail.execution_metadata.duration_seconds.toFixed(2)}s</div>
+                                                    <div class="execution-meta-item">🏷️ ${detail.execution_metadata.source}</div>
+                                                </div>
+                                            ` : ''}
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+                }).join('')}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderCharts(history, latest) {
+            // Trend Chart with Gradients
+            const labels = history.map((_, i) => `Run ${i + 1}`);
+            const models = {};
+
+            history.forEach(h => {
+                if (!models[h.model]) {
+                    models[h.model] = {
+                        label: h.model.charAt(0).toUpperCase() + h.model.slice(1),
+                        data: [],
+                        borderColor: '',
+                        backgroundColor: '',
+                        pointBackgroundColor: '#fff',
+                        pointBorderWidth: 2
+                    };
+                }
+                models[h.model].data.push(h.average_score);
+            });
+
+            const trendCanvas = document.getElementById('trendChart');
+            const ctx = trendCanvas.getContext('2d');
+
+            const colors = {
+                claude: { border: '#1e3a8a', bg: 'rgba(30, 58, 138, 0.2)' },
+                codex: { border: '#92400e', bg: 'rgba(146, 64, 14, 0.2)' },
+                gemini: { border: '#065f46', bg: 'rgba(6, 95, 70, 0.2)' },
+                fallback: [
+                    { border: '#be123c', bg: 'rgba(190, 18, 60, 0.2)' },
+                    { border: '#6d28d9', bg: 'rgba(109, 40, 217, 0.2)' },
+                    { border: '#0369a1', bg: 'rgba(3, 105, 161, 0.2)' }
+                ]
+            };
+
+            let fallbackIdx = 0;
+            Object.entries(models).forEach(([modelId, data]) => {
+                const provider = modelId.split(':')[0].toLowerCase();
+                let color = colors[provider];
+
+                if (!color) {
+                    color = colors.fallback[fallbackIdx % colors.fallback.length];
+                    fallbackIdx++;
+                }
+
+                data.borderColor = color.border;
+                data.backgroundColor = color.bg;
+                data.borderWidth = 3;
+                data.tension = 0.4;
+                data.fill = true;
+                data.pointRadius = 6;
+                data.pointHoverRadius = 8;
+                data.pointBorderColor = color.border;
+            });
+
+            new Chart(trendCanvas, {
+                type: 'line',
+                data: { labels, datasets: Object.values(models) },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { size: 12, weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: '600' },
+                            bodyFont: { size: 13 },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        y: {
+                            min: 60,
+                            max: 100,
+                            grid: { color: 'rgba(0,0,0,0.06)' },
+                            ticks: { font: { size: 11 }, color: '#718096' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 11 }, color: '#718096' }
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+
+            // Radar Chart with Enhanced Styling
+            const radarLabels = Object.keys(latest.scores_by_agent).map(l => {
+                const name = l.replace('-', ' ');
+                return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            });
+            const radarData = Object.values(latest.scores_by_agent).map(s => s.reduce((a, b) => a + b, 0) / s.length);
+
+            if (radarChartInstance) radarChartInstance.destroy();
+            radarChartInstance = new Chart(document.getElementById('radarChart'), {
+                type: 'radar',
+                data: {
+                    labels: radarLabels,
+                    datasets: [{
+                        label: latest.model.charAt(0).toUpperCase() + latest.model.slice(1),
+                        data: radarData,
+                        backgroundColor: 'rgba(30, 58, 138, 0.15)',
+                        borderColor: '#1e3a8a',
+                        pointBackgroundColor: '#1e3a8a',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                usePointStyle: true,
+                                padding: 15,
+                                font: { size: 12, weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            padding: 12,
+                            titleFont: { size: 14, weight: '600' },
+                            bodyFont: { size: 13 },
+                            borderColor: 'rgba(255, 255, 255, 0.1)',
+                            borderWidth: 1
+                        }
+                    },
+                    scales: {
+                        r: {
+                            grid: { color: 'rgba(0,0,0,0.08)' },
+                            angleLines: { color: 'rgba(0,0,0,0.08)' },
+                            pointLabels: {
+                                font: { size: 10, weight: '600' },
+                                color: '#4a5568'
+                            },
+                            ticks: {
+                                backdropColor: 'transparent',
+                                color: '#a0aec0',
+                                font: { size: 10 }
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    },
+                    animation: {
+                        duration: 1000,
+                        easing: 'easeInOutQuart'
+                    }
+                }
+            });
+        }
+
+        function updateRadarChart(run) {
+            if (!radarChartInstance) return;
+
+            const radarLabels = Object.keys(run.scores_by_agent).map(l => {
+                const name = l.replace('-', ' ');
+                return name.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            });
+            const radarData = Object.values(run.scores_by_agent).map(s => s.reduce((a, b) => a + b, 0) / s.length);
+
+            radarChartInstance.data.labels = radarLabels;
+            radarChartInstance.data.datasets[0].label = run.model.charAt(0).toUpperCase() + run.model.slice(1);
+            radarChartInstance.data.datasets[0].data = radarData;
+            radarChartInstance.update();
+        }
+
+
+        function toggleAccordion(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+            header.querySelector('.accordion-toggle').classList.toggle('open');
+        }
+
+        function toggleTestCase(header) {
+            header.classList.toggle('open');
+            header.nextElementSibling.classList.toggle('open');
+            const toggle = header.querySelector('.accordion-toggle');
+            if (toggle) toggle.classList.toggle('open');
+        }
+
+        function filterTests() {
+            const query = document.getElementById('testSearch').value.toLowerCase();
+            const items = document.querySelectorAll('.accordion-item');
+
+            items.forEach(item => {
+                const text = item.innerText.toLowerCase();
+                if (text.includes(query)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        async function copyToClipboard(btn, id) {
+            const text = document.getElementById(`output-${id}`).innerText;
+            try {
+                await navigator.clipboard.writeText(text);
+                const originalText = btn.innerText;
+                btn.innerText = 'Copied!';
+                btn.style.borderColor = 'var(--accent-success)';
+                btn.style.color = 'var(--accent-success)';
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.borderColor = 'rgba(255,255,255,0.2)';
+                    btn.style.color = '#fff';
+                }, 2000);
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy to clipboard');
+            }
+        }
+    </script>
+</body>
+
+</html>

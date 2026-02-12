@@ -1,0 +1,9 @@
+description = "Manage and analyze Gemini session history"
+prompt = """
+This command group handles session history operations.
+
+Available subcommands:
+- /history:hash    - Calculate and show the project's unique hash and storage path.
+- /history:export  - Export the current or recent session history to a file.
+- /history:analyze - Analyze history for patterns and improvements.
+"""

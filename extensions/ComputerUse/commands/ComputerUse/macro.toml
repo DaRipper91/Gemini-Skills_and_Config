@@ -1,0 +1,28 @@
+name = "/computeruse:macro"
+description = "Run a JSON array of Computer Use actions via execute_action; optional per-step screenshots."
+
+prompt = '''
+You have the tools: execute_action, capture_state.
+
+Args:
+- actions:str    JSON array of { "name": "<action_name>", "args": { ... }, "snapshot": true|false, "label": "optional_name" }
+                 Example:
+                 [
+                   {"name":"open_web_browser","args":{"url":"https://example.com"},"snapshot":true,"label":"home"},
+                   {"name":"type_text_at","args":{"x":300,"y":120,"text":"kittens","press_enter":true},"snapshot":true,"label":"search"}
+                 ]
+- prompt:str     Optional prompt applied to each snapshot with gemini.
+- stop_on_error:bool  Stop on first failure (default true).
+
+Behavior:
+- Parse actions JSON. For each step:
+  - execute_action(name, args)
+  - If snapshot=true → capture_state(action_name=label||name, result_ok=ok); if {{prompt}} is set, call gemini on that image.
+- Honor stop_on_error.
+- Print a compact summary.
+
+'''
+[defaults]
+actions = "[]"
+prompt = ""
+stop_on_error = true

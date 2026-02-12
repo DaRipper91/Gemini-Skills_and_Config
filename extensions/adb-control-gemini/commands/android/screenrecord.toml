@@ -1,0 +1,6 @@
+description = "Record the devices screen."
+prompt = """
+Record the devices screen.
+Enter the following parameters: <time (seconds) param name>.
+Example execution: adb shell screenrecord --time-limit <time> /sdcard/demo.mp4.
+"""

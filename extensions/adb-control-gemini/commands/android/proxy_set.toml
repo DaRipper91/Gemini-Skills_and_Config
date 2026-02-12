@@ -1,0 +1,6 @@
+description = "Set the global HTTP proxy."
+prompt = """
+Set the global HTTP proxy.
+Enter the following parameters: <host param name>, <port param name>.
+Example execution: adb shell settings put global http_proxy <host>:<port>.
+"""

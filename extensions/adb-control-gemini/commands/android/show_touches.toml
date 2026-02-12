@@ -1,0 +1,6 @@
+description = "Display touch interactions on the screen (for UI debugging)."
+prompt = """
+Display touch interactions on the screen (for UI debugging).
+Enter the following parameters: <0 (off) or 1 (on) param name>.
+Example execution: adb shell settings put system show_touches 1.
+"""

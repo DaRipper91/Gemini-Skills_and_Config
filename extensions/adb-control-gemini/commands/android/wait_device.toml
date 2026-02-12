@@ -1,0 +1,5 @@
+description = "Wait for a device to be connected."
+prompt = """
+Wait for a device to be connected.
+Example execution: adb wait-for-device.
+"""

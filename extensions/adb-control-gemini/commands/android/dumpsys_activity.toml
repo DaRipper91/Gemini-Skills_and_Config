@@ -1,0 +1,5 @@
+description = "Display information about the Activity Manager."
+prompt = """
+Display information about the Activity Manager.
+Example execution: adb shell dumpsys activity.
+"""

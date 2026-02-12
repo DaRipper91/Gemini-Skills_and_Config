@@ -1,0 +1,5 @@
+description = "Set SELinux to Enforcing mode (block and log)."
+prompt = """
+Set SELinux to Enforcing mode (block and log).
+Example execution: adb shell setenforce 1.
+"""

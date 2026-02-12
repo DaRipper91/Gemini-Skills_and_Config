@@ -1,0 +1,6 @@
+description = "Run a command with superuser privileges (only on rooted devices)."
+prompt = """
+Run a command with superuser privileges (only on rooted devices).
+Enter the following parameters: <command param name>.
+Example execution: adb shell su -c <command>.
+"""

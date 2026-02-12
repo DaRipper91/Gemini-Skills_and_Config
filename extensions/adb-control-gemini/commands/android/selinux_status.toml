@@ -1,0 +1,5 @@
+description = "Display the SELinux status."
+prompt = """
+Display the SELinux status.
+Example execution: adb shell getenforce.
+"""

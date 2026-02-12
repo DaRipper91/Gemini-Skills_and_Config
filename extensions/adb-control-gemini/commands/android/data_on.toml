@@ -1,0 +1,5 @@
+description = "Turn on mobile data on the device."
+prompt = """
+Turn on mobile data on the device.
+Example execution: adb shell svc data enable.
+"""

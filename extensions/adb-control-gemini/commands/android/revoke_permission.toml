@@ -1,0 +1,6 @@
+description = "Revoke a permission from an application."
+prompt = """
+Revoke a permission from an application.
+Enter the following parameters: <package_name param name>, <permission param name>.
+Example execution: adb shell pm revoke <package_name> android.permission.READ_CONTACTS.
+"""

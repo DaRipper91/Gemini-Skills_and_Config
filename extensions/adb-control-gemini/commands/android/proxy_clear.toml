@@ -1,0 +1,5 @@
+description = "Clear the global HTTP proxy."
+prompt = """
+Clear the global HTTP proxy.
+Example execution: adb shell settings put global http_proxy :0.
+"""

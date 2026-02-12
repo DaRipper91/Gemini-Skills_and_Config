@@ -1,0 +1,6 @@
+description = "Check the network connection to a host."
+prompt = """
+Check the network connection to a host.
+Enter the following parameters: <host param name>.
+Example execution: adb shell ping <host>.
+"""

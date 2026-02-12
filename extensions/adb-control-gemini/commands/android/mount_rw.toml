@@ -1,0 +1,6 @@
+description = "Remount the system partition in read-write mode (requires root)."
+prompt = """
+Remount the system partition in read-write mode (requires root).
+Enter the following parameters: <partition_path param name>.
+Example execution: adb shell mount -o rw,remount /system.
+"""

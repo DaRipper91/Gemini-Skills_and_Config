@@ -1,0 +1,16 @@
+{
+  "name": "adb-control-gemini",
+  "version": "0.0.8",
+  "description": "Control Android devices via ADB with Gemini CLI using /android commands",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "adbServer": {
+      "command": "node",
+      "args": ["${extensionPath}/mcp-server/dist/index.js"],
+      "cwd": "${extensionPath}/mcp-server",
+      "env": {
+        "EXTENSION_PATH": "${extensionPath}"
+      }
+    }
+  }
+}

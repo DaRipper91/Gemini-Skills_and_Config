@@ -1,0 +1,6 @@
+{
+  "name": "repomix-manager",
+  "version": "1.0.0",
+  "description": "Standardizes repositories for AI-Ready context packing using repomix.",
+  "contextFileName": "SKILL.md"
+}

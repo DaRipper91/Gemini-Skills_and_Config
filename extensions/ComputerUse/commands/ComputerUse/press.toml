@@ -1,0 +1,16 @@
+name = "/computeruse:press"
+description = "Press a single key or chord via execute_action(press_key)."
+
+prompt = '''
+You have the tools: execute_action.
+
+Args:
+- key:str    Examples: "Enter", "Escape", "Control+L", "Meta+L", "ArrowDown"
+
+Behavior:
+- Call execute_action("press_key", {"key": "{{key|Enter}}"}).
+- Print result.
+'''
+
+[defaults]
+key = "Enter"

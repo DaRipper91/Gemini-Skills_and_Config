@@ -1,0 +1,5 @@
+description = "Switch ADB to USB mode."
+prompt = """
+Switch ADB to USB mode.
+Example execution: adb usb.
+"""

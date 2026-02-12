@@ -1,0 +1,6 @@
+description = "Request MediaScanner to rescan a directory."
+prompt = """
+Request MediaScanner to rescan a directory.
+Enter the following parameters: <path param name>.
+Example execution: adb shell am broadcast -a android.intent.action.MEDIA_MOUNTED -d file://<path>.
+"""

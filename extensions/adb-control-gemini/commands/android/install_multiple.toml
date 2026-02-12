@@ -1,0 +1,6 @@
+description = "Install multiple APKs for an application."
+prompt = """
+Install multiple APKs for an application.
+Enter the following parameters: <path to APKs on computer param name>.
+Example execution: adb install-multiple <path1.apk> <path2.apk>.
+"""

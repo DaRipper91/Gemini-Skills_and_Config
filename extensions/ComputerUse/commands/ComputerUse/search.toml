@@ -1,0 +1,9 @@
+name = "/computeruse:search"
+description = "Search via omnibox using keyboard only."
+prompt = '''
+You have the tool: execute_action.
+1. execute_action("press_key", {"key": "Control+L"})
+2. execute_action("execute_javascript", {"code": "document.activeElement.value = '{{query}}'; void 0;"})
+3. execute_action("press_key", {"key": "Enter"})
+4. capture_state("search_results")
+'''

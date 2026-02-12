@@ -1,0 +1,17 @@
+name = "/computeruse:js"
+description = "Run a JS snippet in the page (if supported in your MCP)."
+
+prompt = '''
+You have the tools: execute_action.
+
+Args:
+- code:str   JavaScript code to execute in page context.
+
+Behavior:
+- Call execute_action("execute_javascript", {"code": {{code|""}} }).
+- Show result or stub warning.
+
+Note: In your current MCP, this action is listed but may not yet be implemented.
+'''
+[defaults]
+code = "return document.title;"

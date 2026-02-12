@@ -1,0 +1,6 @@
+description = "Terminate all processes with a specific name."
+prompt = """
+Terminate all processes with a specific name.
+Enter the following parameters: <process_name param name>.
+Example execution: adb shell killall <process_name>.
+"""

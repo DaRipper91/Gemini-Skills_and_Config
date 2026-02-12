@@ -1,0 +1,5 @@
+description = "Start the ADB server."
+prompt = """
+Start the ADB server.
+Example execution: adb start-server.
+"""

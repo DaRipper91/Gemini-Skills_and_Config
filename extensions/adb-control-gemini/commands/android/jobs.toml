@@ -1,0 +1,5 @@
+description = "List jobs in the shell."
+prompt = """
+List jobs in the shell.
+Example execution: adb shell jobs.
+"""

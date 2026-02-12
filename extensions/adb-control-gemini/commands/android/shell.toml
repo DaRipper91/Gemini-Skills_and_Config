@@ -1,0 +1,5 @@
+description = "Open an interactive shell on the device."
+prompt = """
+Open an interactive shell on the device.
+Example execution: adb shell.
+"""

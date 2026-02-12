@@ -1,0 +1,11 @@
+{
+  "name": "run-long-command",
+  "version": "1.0.2",
+  "contextFileName": "GEMINI.md",
+  "mcpServers": {
+    "runLongCommand": {
+      "command": "node",
+      "args": ["${extensionPath}${/}dist${/}run_long_command.js"]
+    }
+  }
+}

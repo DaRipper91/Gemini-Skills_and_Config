@@ -1,0 +1,6 @@
+description = "Pull the screen recording file from the device to the computer."
+prompt = """
+Pull the screen recording file from the device to the computer.
+Enter the following parameters: <remote_path param name>, <local_file_path param name>.
+Example execution: adb pull /sdcard/demo.mp4 <local_file_path>.
+"""

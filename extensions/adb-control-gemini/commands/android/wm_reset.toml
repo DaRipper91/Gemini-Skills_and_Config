@@ -1,0 +1,5 @@
+description = "Reset the screen size and density to default."
+prompt = """
+Reset the screen size and density to default.
+Example execution: adb shell wm size reset; adb shell wm density reset.
+"""

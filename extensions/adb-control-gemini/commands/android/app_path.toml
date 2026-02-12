@@ -1,0 +1,6 @@
+description = "Get the installation path of an application."
+prompt = """
+Get the installation path of an application.
+Enter the following parameters: <package_name param name>.
+Example execution: adb shell pm path <package_name>.
+"""

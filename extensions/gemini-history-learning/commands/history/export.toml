@@ -1,0 +1,15 @@
+description = "Export session history (json, md, csv)"
+prompt = """
+You are requested to export the session history.
+
+**Usage:** `/history:export [format]` (default: markdown)
+
+**Instructions:**
+1.  Follow the **Export Protocol** defined in `GEMINI.md`.
+2.  Calculate the project hash to locate the history files.
+3.  Find the latest session file in `~/.gemini/tmp/<HASH>/chats/`.
+4.  Read the JSON content.
+5.  Convert it to the requested format (Markdown, JSON, or CSV).
+6.  Write the result to a new file in the current directory.
+7.  Confirm the filename to the user.
+"""

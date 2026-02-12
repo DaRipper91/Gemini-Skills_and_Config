@@ -1,0 +1,6 @@
+description = "Install an application from an APK file."
+prompt = """
+Install an application from an APK file.
+Enter the following parameters: <APK path on computer param name>.
+Example execution: adb install <APK path>.
+"""

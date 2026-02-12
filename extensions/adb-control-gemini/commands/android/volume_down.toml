@@ -1,0 +1,5 @@
+description = "Decrease the volume."
+prompt = """
+Decrease the volume.
+Example execution: adb shell input keyevent KEYCODE_VOLUME_DOWN.
+"""

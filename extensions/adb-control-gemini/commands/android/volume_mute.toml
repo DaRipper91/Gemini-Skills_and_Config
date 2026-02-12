@@ -1,0 +1,5 @@
+description = "Mute/unmute the volume."
+prompt = """
+Mute/unmute the volume.
+Example execution: adb shell input keyevent KEYCODE_VOLUME_MUTE.
+"""

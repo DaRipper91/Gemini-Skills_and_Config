@@ -1,0 +1,6 @@
+description = "Search for a file on the device."
+prompt = """
+Search for a file on the device.
+Enter the following parameters: <directory param name>, <file_name/pattern param name>.
+Example execution: adb shell find /sdcard -name "*.jpg".
+"""

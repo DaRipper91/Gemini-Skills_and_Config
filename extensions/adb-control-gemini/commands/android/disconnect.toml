@@ -1,0 +1,5 @@
+description = "Disconnect from an Android device via TCP/IP."
+prompt = """
+Disconnect from an Android device via TCP/IP.
+Example execution: adb disconnect.
+"""

@@ -1,0 +1,5 @@
+description = "List tombstones files (application error information)."
+prompt = """
+List tombstones files (application error information).
+Example execution: adb shell ls /data/tombstones.
+"""

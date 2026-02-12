@@ -1,0 +1,20 @@
+name = "/computeruse:drag"
+description = "Drag from (x1,y1) → (x2,y2) normalized coords via execute_action(drag_and_drop)."
+
+prompt = '''
+You have the tools: execute_action.
+
+Args:
+- x1:int, y1:int, x2:int, y2:int  (each 0..1000)
+
+Behavior:
+- Call execute_action("drag_and_drop", {"x1": {{x1|300}}, "y1": {{y1|300}}, "x2": {{x2|700}}, "y2": {{y2|700}} }).
+- Print status.
+
+Note: May be stubbed until implemented in your MCP.
+'''
+[defaults]
+x1 = 300
+y1 = 300
+x2 = 700
+y2 = 700

@@ -1,0 +1,5 @@
+description = "Reboot the device into Bootloader mode."
+prompt = """
+Reboot the device into Bootloader mode.
+Example execution: adb reboot bootloader.
+"""

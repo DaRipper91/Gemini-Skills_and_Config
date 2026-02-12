@@ -1,0 +1,16 @@
+name = "/computeruse:scroll"
+description = "Smoothly scroll vertically to a % (0..1000) via execute_action(scroll_to_percent)."
+
+prompt = '''
+You have the tools: execute_action.
+
+Args:
+- y:int  (0..1000)
+
+Behavior:
+- Call execute_action("scroll_to_percent", {"y": {{y|500}} }).
+- Print status.
+'''
+
+[defaults]
+y = 500

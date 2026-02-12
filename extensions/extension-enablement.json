@@ -1,0 +1,102 @@
+{
+  "pickle-rick": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "github": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "git-expert": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "code-review": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "gemini-logos": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "gemini-cli-prompt-library": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "gemini-history-learning": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "run-long-command": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "plan": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "scribe": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "persona": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "co-researcher": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "agent-creator": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "gemini-deep-research": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "adb-control-gemini": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "conductor": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "exa-mcp-server": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "mcp-toolbox": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "ComputerUse": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  },
+  "repomix-manager": {
+    "overrides": [
+      "/home/daripper/*"
+    ]
+  }
+}

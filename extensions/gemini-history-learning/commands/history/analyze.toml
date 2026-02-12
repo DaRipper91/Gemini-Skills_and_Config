@@ -1,0 +1,13 @@
+description = "Analyze history for process improvements"
+prompt = """
+You are requested to analyze the session history for improvements.
+
+**Instructions:**
+1.  Follow the **Analysis Protocol** defined in `GEMINI.md`.
+2.  Locate and read the latest session history file.
+3.  Analyze the user-agent interactions for:
+    *   User corrections or frustrations.
+    *   Tool usage errors.
+    *   Inefficient workflows.
+4.  Generate a report suggesting specific changes to `GEMINI.md` or new commands.
+"""

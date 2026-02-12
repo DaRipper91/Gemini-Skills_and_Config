@@ -1,0 +1,6 @@
+description = "Set the simulated battery level (0-100, requires root)."
+prompt = """
+Set the simulated battery level (0-100, requires root).
+Enter the following parameters: <level param name>.
+Example execution: adb shell dumpsys battery set level <level>.
+"""

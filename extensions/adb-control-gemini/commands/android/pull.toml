@@ -1,0 +1,6 @@
+description = "Copy a file or directory from the device to the computer."
+prompt = """
+Copy a file or directory from the device to the computer.
+Enter the following parameters: <remote_path param name>, <local_path param name>.
+Example execution: adb pull <remote_path> <local_path>.
+"""

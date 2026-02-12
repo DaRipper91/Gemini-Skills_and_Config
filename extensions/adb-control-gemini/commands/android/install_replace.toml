@@ -1,0 +1,6 @@
+description = "Reinstall an application, keeping the data."
+prompt = """
+Reinstall an application, keeping the data.
+Enter the following parameters: <APK path on computer param name>.
+Example execution: adb install -r <APK path>.
+"""

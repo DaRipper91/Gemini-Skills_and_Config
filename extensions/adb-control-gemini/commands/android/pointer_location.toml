@@ -1,0 +1,6 @@
+description = "Display pointer location information on the screen."
+prompt = """
+Display pointer location information on the screen.
+Enter the following parameters: <0 (off) or 1 (on) param name>.
+Example execution: adb shell settings put system pointer_location 1.
+"""

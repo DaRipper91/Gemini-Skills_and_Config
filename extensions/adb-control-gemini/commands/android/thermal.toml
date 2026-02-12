@@ -1,0 +1,5 @@
+description = "Display temperature information of the device."
+prompt = """
+Display temperature information of the device.
+Example execution: adb shell dumpsys thermalservice.
+"""

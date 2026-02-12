@@ -1,0 +1,5 @@
+description = "Turn on app verification over ADB."
+prompt = """
+Turn on app verification over ADB.
+Example execution: adb shell settings put global verify_apps_over_adb 1.
+"""

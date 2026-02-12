@@ -1,0 +1,5 @@
+description = "Turn off developer options."
+prompt = """
+Turn off developer options.
+Example execution: adb shell settings put global development_settings_enabled 0.
+"""

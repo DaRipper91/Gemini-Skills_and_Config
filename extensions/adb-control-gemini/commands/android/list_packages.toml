@@ -1,0 +1,5 @@
+description = "List all installed application packages."
+prompt = """
+List all installed application packages.
+Example execution: adb shell pm list packages.
+"""

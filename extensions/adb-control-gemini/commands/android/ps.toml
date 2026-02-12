@@ -1,0 +1,5 @@
+description = "List running processes on the device."
+prompt = """
+List running processes on the device.
+Example execution: adb shell ps.
+"""
