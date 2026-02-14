@@ -8,7 +8,10 @@
       "args": [
         "dist/index.js"
       ],
-      "cwd": "${extensionPath}"
+      "cwd": "${extensionPath}",
+      "env": {
+        "GEMINI_API_KEY": "AIzaSyBT40zUR-cBMLDCCdcifXzIsdZ6wij3S0g"
+      }
     }
   }
 }
