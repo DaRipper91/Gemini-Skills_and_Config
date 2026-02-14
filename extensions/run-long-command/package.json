@@ -15,7 +15,7 @@
     "vitest": "^1.4.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.23.0",
+    "@modelcontextprotocol/sdk": "^1.26.0",
     "zod": "^3.22.4"
   }
 }
