@@ -28,6 +28,6 @@
     "js-tiktoken": "^1.0.21"
   },
   "devDependencies": {
-    "promptfoo": "^0.119.14"
+    "promptfoo": "^0.120.24"
   }
 }
