@@ -84,17 +84,7 @@
       "/home/daripper/*"
     ]
   },
-  "mcp-toolbox": {
-    "overrides": [
-      "/home/daripper/*"
-    ]
-  },
   "ComputerUse": {
-    "overrides": [
-      "/home/daripper/*"
-    ]
-  },
-  "repomix-manager": {
     "overrides": [
       "/home/daripper/*"
     ]

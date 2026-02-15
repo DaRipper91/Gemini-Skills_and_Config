@@ -10,7 +10,7 @@
       ],
       "cwd": "${extensionPath}",
       "env": {
-        "GEMINI_API_KEY": "AIzaSyBT40zUR-cBMLDCCdcifXzIsdZ6wij3S0g"
+        "GEMINI_API_KEY": "AIzaSyD9Dxm86-Hk_8j2DeX6WMLFLblea7FEsck"
       }
     }
   }

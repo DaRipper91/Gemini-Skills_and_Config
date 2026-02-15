@@ -8,13 +8,13 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z, ZodRawShape } from 'zod';
 import type { CallToolResult } from '@modelcontextprotocol/sdk/types.js';
-import { exec } from 'child_process';
+import { execFile } from 'child_process';
 import * as fs from 'fs';
 import * as path from 'path';
 import toml from 'toml';
 import { promisify } from 'util';
 
-const execPromise = promisify(exec);
+const execFilePromise = promisify(execFile);
 
 // Ensure the EXTENSION_PATH is set.
 const extensionPath = process.env.EXTENSION_PATH;
@@ -26,19 +26,20 @@ if (!extensionPath) {
 // Initialize the MCP Server.
 const server = new McpServer({
   name: 'adb-control-gemini',
-  version: '0.0.7', // Updated version with adb-mcp integration
+  version: '0.0.8', // Security fix for command injection
 });
 
 /**
- * Executes a shell command and wraps the result in a CallToolResult.
- * @param command The shell command to execute.
+ * Executes a shell command securely using execFile and wraps the result in a CallToolResult.
+ * @param command The command to execute.
+ * @param args The arguments for the command.
  * @returns A Promise that resolves to a CallToolResult.
  */
-async function executeCommandAsTool(command: string): Promise<CallToolResult> {
+async function executeCommandAsTool(command: string, args: string[]): Promise<CallToolResult> {
   return new Promise((resolve) => {
-    exec(command, (error, stdout, stderr) => {
+    execFile(command, args, (error, stdout, stderr) => {
       if (error) {
-        const errorMessage = `Command failed: ${command}\nError: ${error.message}\nStderr: ${stderr}`;
+        const errorMessage = `Command failed: ${command} ${args.join(' ')}\nError: ${error.message}\nStderr: ${stderr}`;
         console.error(errorMessage);
         // On failure, resolve with an error message in the tool output.
         resolve({
@@ -68,14 +69,14 @@ server.tool(
   'get_screen',
   'Get the current screen state of the Android device as JSON.',
   {},
-  () => executeCommandAsTool(`python3 ${utilsPath('get_screen.py')}`)
+  () => executeCommandAsTool('python3', [utilsPath('get_screen.py')])
 );
 
 server.tool(
   'get_screen_summary',
   'Get a summarized version of the screen state. Faster and uses fewer tokens. Recommended for initial exploration.',
   {},
-  () => executeCommandAsTool(`python3 ${utilsPath('get_screen_summary.py')}`)
+  () => executeCommandAsTool('python3', [utilsPath('get_screen_summary.py')])
 );
 
 server.tool(
@@ -86,7 +87,7 @@ server.tool(
   },
   ({ action_json }) => {
     const encodedJson = Buffer.from(action_json, 'utf8').toString('base64');
-    return executeCommandAsTool(`python3 ${utilsPath('execute_action.py')} '${encodedJson}'`);
+    return executeCommandAsTool('python3', [utilsPath('execute_action.py'), encodedJson]);
   }
 );
 
@@ -94,7 +95,7 @@ server.tool(
   'check_env',
   'Check the ADB environment and Android device connection.',
   {},
-  () => executeCommandAsTool(`python3 ${utilsPath('check_env.py')}`)
+  () => executeCommandAsTool('python3', [utilsPath('check_env.py')])
 );
 
 server.tool(
@@ -105,7 +106,7 @@ server.tool(
   },
   ({ code }) => {
     const encodedCode = Buffer.from(code, 'utf8').toString('base64');
-    return executeCommandAsTool(`python3 ${utilsPath('run_ai_script.py')} '${encodedCode}'`);
+    return executeCommandAsTool('python3', [utilsPath('run_ai_script.py'), encodedCode]);
   }
 );
 
@@ -117,24 +118,24 @@ server.tool(
   },
   ({ actions_json }) => {
     const encodedJson = Buffer.from(actions_json, 'utf8').toString('base64');
-    return executeCommandAsTool(`python3 ${utilsPath('execute_batch.py')} '${encodedJson}'`);
+    return executeCommandAsTool('python3', [utilsPath('execute_batch.py'), encodedJson]);
   }
 );
 
-// --- Register adb-mcp Tools ---
+// --- Register ADB Tools ---
 
 /**
  * Helper to format device argument for ADB commands
  */
-function formatDeviceArg(device?: string): string {
-  return device ? `-s ${device} ` : '';
+function getDeviceArgs(device?: string): string[] {
+  return device ? ['-s', device] : [];
 }
 
 server.tool(
   'adb_devices',
   'Lists all connected Android devices and emulators with their status and details.',
   {},
-  () => executeCommandAsTool('adb devices -l')
+  () => executeCommandAsTool('adb', ['devices', '-l'])
 );
 
 server.tool(
@@ -144,12 +145,12 @@ server.tool(
     device: z.string().optional().describe('Optional device ID'),
   },
   async ({ device }) => {
-    const deviceArg = formatDeviceArg(device);
+    const deviceArgs = getDeviceArgs(device);
     const tempFile = `/tmp/view-${Date.now()}.xml`;
     try {
-      await execPromise(`adb ${deviceArg}shell uiautomator dump ${tempFile}`);
-      const { stdout } = await execPromise(`adb ${deviceArg}shell cat ${tempFile}`);
-      await execPromise(`adb ${deviceArg}shell rm ${tempFile}`);
+      await execFilePromise('adb', [...deviceArgs, 'shell', 'uiautomator', 'dump', tempFile]);
+      const { stdout } = await execFilePromise('adb', [...deviceArgs, 'shell', 'cat', tempFile]);
+      await execFilePromise('adb', [...deviceArgs, 'shell', 'rm', tempFile]);
       return {
         content: [{ type: 'text', text: stdout }],
       };
@@ -170,9 +171,11 @@ server.tool(
     filter: z.string().optional().describe('Optional logcat filter expression'),
   },
   ({ device, lines, filter }) => {
-    const deviceArg = formatDeviceArg(device);
-    const filterArg = filter ? ` ${filter}` : '';
-    return executeCommandAsTool(`adb ${deviceArg}logcat -d -t ${lines}${filterArg}`);
+    const args = [...getDeviceArgs(device), 'logcat', '-d', '-t', String(lines)];
+    if (filter) {
+      args.push(filter);
+    }
+    return executeCommandAsTool('adb', args);
   }
 );
 
@@ -224,7 +227,10 @@ try {
         });
         
         finalCommand = finalCommand.replace(/<[^>]+>/g, '').trim();
-        return executeCommandAsTool(finalCommand);
+        
+        // Split the command securely and execute
+        const [cmd, ...cmdArgs] = finalCommand.split(/\s+/);
+        return executeCommandAsTool(cmd, cmdArgs);
       });
     }
   }

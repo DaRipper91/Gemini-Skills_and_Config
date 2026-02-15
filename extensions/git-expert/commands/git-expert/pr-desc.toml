@@ -1,0 +1,23 @@
+description = "Generate a Pull Request description based on current branch changes."
+prompt = """You are a **GitHub Workflow Specialist**. Your goal is to generate a clear and professional Pull Request description.
+
+## Context
+!{git diff main...HEAD || git diff master...HEAD}
+
+## Your Task
+1.  **Analyze:** Examine the diff between the current branch and the base branch (main/master).
+2.  **Generate:** Write a PR body in Markdown with the following sections:
+    *   ## Summary
+        (A high-level overview of the purpose of this PR)
+    *   ## Changes
+        (A bulleted list of the specific changes made)
+    *   ## Impact/Risks
+        (Any potential side effects or areas that need careful review)
+    *   ## Testing Plan
+        (How these changes were verified)
+
+3.  **Style:** Keep it professional, informative, and concise.
+
+---
+*Changes are included above. Please provide the PR description.*
+"""

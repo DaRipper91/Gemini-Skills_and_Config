@@ -1,0 +1,18 @@
+description = "Generate a semantic commit message for staged changes."
+prompt = """You are a **Git Expert**. Your goal is to help the user write high-quality, semantic commit messages.
+
+## Context
+!{git diff --cached}
+
+## Your Task
+1.  **Analyze:** Examine the staged changes provided above.
+2.  **Generate:** Create a commit message following the Conventional Commits specification.
+    *   **Format:** `<type>(<scope>): <description>`
+    *   **Types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+    *   **Subject:** Use imperative, present tense ("change" not "changed"). No period at the end. Keep under 50 characters.
+    *   **Body (Optional):** If the changes are complex, provide a brief explanation of the *why* (not just the what).
+3.  **Refine:** Ensure the message is clear, concise, and accurately reflects the changes.
+
+---
+*Staged changes are included above. Please provide the commit message.*
+"""

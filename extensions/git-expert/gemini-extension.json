@@ -2,19 +2,5 @@
   "name": "git-expert",
   "version": "1.0.0",
   "description": "GitHub Workflow Specialist for commits, PRs, and issue resolution.",
-  "author": "Ankit",
-  "commands": [
-    {
-      "name": "/commit",
-      "description": "Generate a semantic commit message for staged changes."
-    },
-    {
-      "name": "/pr-desc",
-      "description": "Generate a Pull Request description based on current branch changes."
-    },
-    {
-      "name": "/resolve-issue",
-      "description": "Plan a fix for a pasted GitHub issue."
-    }
-  ]
+  "author": "Ankit"
 }

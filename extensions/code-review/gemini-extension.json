@@ -2,11 +2,5 @@
   "name": "code-review",
   "version": "1.0.0",
   "description": "Senior Code Reviewer for auditing changes and diffs.",
-  "author": "Ankit",
-  "commands": [
-    {
-      "name": "/review",
-      "description": "Perform a detailed code review of a file or set of changes."
-    }
-  ]
+  "author": "Ankit"
 }
