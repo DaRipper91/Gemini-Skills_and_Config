@@ -55,7 +55,7 @@
     "@upstash/redis": "^1.36.1",
     "tsx": "^4.7.0",
     "typescript": "^5.9.3",
-    "vercel": "^37.0.0"
+    "vercel": "^50.18.0"
   },
   "engines": {
     "node": ">=18.0.0"
