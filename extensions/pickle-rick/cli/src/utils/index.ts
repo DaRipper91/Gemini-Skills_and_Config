@@ -12,11 +12,7 @@ export function lerpColor(c1: RGBA, c2: RGBA, t: number): RGBA {
 export function lerpColorHex(color1: string, color2: string, factor: number): string {
   const c1 = parseColor(color1);
   const c2 = parseColor(color2);
-  const r = c1.r + (c2.r - c1.r) * factor;
-  const g = c1.g + (c2.g - c1.g) * factor;
-  const b = c1.b + (c2.b - c1.b) * factor;
-  const a = c1.a + (c2.a - c1.a) * factor;
-  return rgbToHex(RGBA.fromValues(r, g, b, a));
+  return rgbToHex(lerpColor(c1, c2, factor));
 }
 
 export function createGradientText(text: string, startColor: RGBA, endColor: RGBA): StyledText {
